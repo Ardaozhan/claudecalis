@@ -76,6 +76,17 @@ Sebebi: uygulama sırasında kullanıcıya soru sormak, ara sonuç göstermek ve
 değiştirmek gerekir. Subagent bunu yapamaz — kendi context'inde başlar, biter ve
 tek bir metin döner. Subagent'ın gücü de sınırı da aynı yerden gelir.
 
+#### Neden hepsi `model: sonnet`
+
+Beş agent da `model: sonnet` kullanır. Gerekçe: bu agent'ların işi **sınırlı ve
+formatı sabit.** Her biri belli bir girdiyi belli bir bloğa çevirir; açık uçlu
+mimari muhakeme yapmazlar — o iş ana thread'de kalır. Ayrıca `/feature`'ın her
+çalışması 4 agent doğurur, yani maliyet her koşuda dörtle çarpılır.
+
+Bu bir tercih, dogma değil. `spec-writer` veya `impl-planner` büyük ve belirsiz
+işlerde yetersiz kalırsa o iki agent Opus'a çekilebilir; `test-first` ve
+`change-reviewer` mekanik oldukları için sonnet'te kalmalı.
+
 ### `context-auditor` — subagent
 
 Kurulumun context maliyetini ölçer.
