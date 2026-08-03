@@ -228,6 +228,97 @@ model: gpt-5
         }
     }
 
+    Context "hook butunlugu" {
+
+        # Yardimci: sahte repoya .claude/settings.json yazar.
+        function Set-FakeSettings {
+            param([string]$RepoPath, [string]$Json)
+            $Dir = Join-Path $RepoPath ".claude"
+            New-Item -ItemType Directory -Force -Path $Dir | Out-Null
+            Set-Content -LiteralPath (Join-Path $Dir "settings.json") -Value $Json -Encoding UTF8
+        }
+
+        It "var olmayan hook script'ini yakalar" {
+            Set-FakeSettings -RepoPath $script:Repo -Json @'
+{
+  "hooks": {
+    "PreToolUse": [
+      { "matcher": "Write",
+        "hooks": [ { "type": "command",
+                     "command": "powershell.exe -File \"$CLAUDE_PROJECT_DIR/hooks/olmayan.ps1\"" } ] }
+    ]
+  }
+}
+'@
+            $R = Invoke-Validate -RepoPath $script:Repo
+            $R.ExitCode | Should Be 1
+            $R.Output   | Should Match "bulunamadi"
+        }
+
+        It "bozuk JSON'u yakalar" {
+            Set-FakeSettings -RepoPath $script:Repo -Json '{ "hooks": { bozuk json'
+            $R = Invoke-Validate -RepoPath $script:Repo
+            $R.ExitCode | Should Be 1
+            $R.Output   | Should Match "Gecerli JSON degil"
+        }
+
+        It "var olan hook script'ini kabul eder ve CLAUDE_PROJECT_DIR'i cozer" {
+            New-Item -ItemType Directory -Force -Path (Join-Path $script:Repo "hooks") | Out-Null
+            [System.IO.File]::WriteAllText(
+                (Join-Path $script:Repo "hooks\gercek.ps1"), "exit 0",
+                (New-Object System.Text.UTF8Encoding $true))
+
+            Set-FakeSettings -RepoPath $script:Repo -Json @'
+{
+  "hooks": {
+    "PostToolUse": [
+      { "matcher": "Write",
+        "hooks": [ { "type": "command",
+                     "command": "powershell.exe -File \"$CLAUDE_PROJECT_DIR/hooks/gercek.ps1\"" } ] }
+    ]
+  }
+}
+'@
+            $R = Invoke-Validate -RepoPath $script:Repo
+            $R.ExitCode | Should Be 0
+        }
+    }
+
+    Context "sizinti taramasi" {
+
+        # Sahte anahtarlar PARCALI yazilir. Tam haliyle yazilsalardi bu test
+        # dosyasinin kendisi her taramada eslesirdi.
+
+        It "AWS erisim anahtari desenini yakalar" {
+            $Sahte = "AKIA" + "ABCDEFGHIJKLMNOP"
+            Set-Content -LiteralPath (Join-Path $script:Repo "ayar.json") `
+                        -Value "{ `"anahtar`": `"$Sahte`" }" -Encoding UTF8
+
+            $R = Invoke-Validate -RepoPath $script:Repo
+            $R.ExitCode | Should Be 1
+            $R.Output   | Should Match "Sizinti suphesi"
+        }
+
+        It "ozel anahtar blogunu yakalar" {
+            $Sahte = "-----BEGIN RSA PRIVATE" + " KEY-----"
+            Set-Content -LiteralPath (Join-Path $script:Repo "kimlik.txt") `
+                        -Value $Sahte -Encoding UTF8
+
+            $R = Invoke-Validate -RepoPath $script:Repo
+            $R.ExitCode | Should Be 1
+            $R.Output   | Should Match "Sizinti suphesi"
+        }
+
+        It "zararsiz metinde yanlis alarm vermez" {
+            Set-Content -LiteralPath (Join-Path $script:Repo "notlar.md") `
+                        -Value "Anahtar yonetimi icin ortam degiskeni kullanilir. AKIA kelimesi burada gecer ama desen tamamlanmiyor." `
+                        -Encoding UTF8
+
+            $R = Invoke-Validate -RepoPath $script:Repo
+            $R.ExitCode | Should Be 0
+        }
+    }
+
     Context "birden fazla sorun" {
 
         It "hem hata hem uyari varken cikis kodu 1 olur" {

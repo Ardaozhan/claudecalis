@@ -236,7 +236,87 @@ if (Test-Path $ClaudeHome) {
     Add-Problem -Severity "UYARI" -File "~/.claude" -Message "Bulunamadi; kurulum senkron kontrolu atlandi."
 }
 
-# 6. Testler
+# 6. Hook butunlugu
+#    Zorlayici katmanin kendisi korumasiz kalmasin: settings.json bozuksa ya da
+#    bir hook script'i eksikse hook'lar SESSIZCE calismaz. Hata mesaji yok,
+#    uyari yok — sadece koruma ortadan kalkar.
+if (-not $Quiet) { Write-Host "Hook butunlugu" -ForegroundColor White }
+$SettingsPath = Join-Path $RepoRoot ".claude\settings.json"
+if (Test-Path $SettingsPath) {
+    Write-Check ".claude/settings.json"
+
+    $Settings = $null
+    try {
+        $Settings = Get-Content -LiteralPath $SettingsPath -Raw -Encoding UTF8 | ConvertFrom-Json
+    } catch {
+        Add-Problem -Severity "HATA" -File ".claude/settings.json" `
+                    -Message "Gecerli JSON degil: $($_.Exception.Message)"
+    }
+
+    if ($Settings -and $Settings.hooks) {
+        foreach ($EventName in $Settings.hooks.PSObject.Properties.Name) {
+            foreach ($Matcher in $Settings.hooks.$EventName) {
+                foreach ($Hook in $Matcher.hooks) {
+                    if ($Hook.type -ne "command" -or -not $Hook.command) { continue }
+
+                    if ($Hook.command -match '-File\s+"([^"]+)"') {
+                        $HookPath = $Matches[1] -replace '\$CLAUDE_PROJECT_DIR', $RepoRoot
+                        $HookPath = $HookPath -replace '/', '\'
+                        if (Test-Path -LiteralPath $HookPath) {
+                            Write-Check "  $EventName -> $(Split-Path $HookPath -Leaf)"
+                        } else {
+                            Add-Problem -Severity "HATA" -File ".claude/settings.json" `
+                                        -Message "$EventName hook'unun script'i bulunamadi: $HookPath"
+                        }
+                    } else {
+                        Add-Problem -Severity "UYARI" -File ".claude/settings.json" `
+                                    -Message "$EventName hook komutundan script yolu cikarilamadi: $($Hook.command)"
+                    }
+                }
+            }
+        }
+    }
+}
+
+# 7. Sizinti taramasi
+#    Global guvenlik kurali "commit oncesi hardcoded secret olmayacak" diyor ama
+#    bunu zorlayan bir sey yoktu.
+#
+#    DIKKAT: desenler parcali yazilmis ("AKIA" + "[0-9A-Z]{16}"). Sebep: tam
+#    haliyle yazilsalardi bu dosyanin KENDISI her taramada eslesirdi.
+$SecretPatterns = @(
+    @{ Ad = "AWS erisim anahtari";    Desen = "AKIA" + "[0-9A-Z]{16}" },
+    @{ Ad = "GitHub token";           Desen = "gh[pousr]" + "_[A-Za-z0-9]{36,}" },
+    @{ Ad = "Anthropic API anahtari"; Desen = "sk-ant-" + "[A-Za-z0-9_-]{24,}" },
+    @{ Ad = "Slack token";            Desen = "xox[baprs]" + "-[A-Za-z0-9-]{12,}" },
+    @{ Ad = "Ozel anahtar blogu";     Desen = "-----BEGIN [A-Z ]*PRIVATE" + " KEY-----" }
+)
+
+$ScanExtensions = @(".md", ".ps1", ".psm1", ".json", ".yml", ".yaml",
+                    ".ts", ".js", ".txt", ".xml", ".config", ".env")
+
+if (-not $Quiet) { Write-Host "Sizinti taramasi" -ForegroundColor White }
+$Scanned = 0
+foreach ($File in Get-ChildItem -Path $RepoRoot -Recurse -File -Force -EA SilentlyContinue) {
+    if ($File.FullName -like "*\.git\*") { continue }
+    if ($ScanExtensions -notcontains $File.Extension.ToLower()) { continue }
+
+    $Rel = $File.FullName.Substring($RepoRoot.Length + 1)
+    $Scanned++
+
+    $Text = Get-Content -LiteralPath $File.FullName -Raw -Encoding UTF8 -EA SilentlyContinue
+    if (-not $Text) { continue }
+
+    foreach ($P in $SecretPatterns) {
+        if ($Text -cmatch $P.Desen) {
+            Add-Problem -Severity "HATA" -File $Rel `
+                        -Message "Sizinti suphesi ($($P.Ad)). Gercekse anahtari HEMEN iptal et; ornek/test verisiyse desene uymayan sahte bir deger kullan."
+        }
+    }
+}
+Write-Check "$Scanned dosya tarandi"
+
+# 8. Testler
 if (-not $SkipTests) {
     if (-not $Quiet) { Write-Host "Testler" -ForegroundColor White }
     $TestDir = Join-Path $RepoRoot "tests"

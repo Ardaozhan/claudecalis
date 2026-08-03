@@ -43,10 +43,10 @@ claudecalis/
 ├── templates/
 │   ├── CLAUDE.md.template     ← gerçek repolara düşürülecek şablon
 │   └── README.md              ← şablon doldurma kuralları
-├── tests/                     ← Pester 3.4, toplam 42 test
+├── tests/                     ← Pester 3.4, toplam 48 test
 │   ├── Uninstall.Tests.ps1    (10)  install.ps1 -Uninstall davranışı
 │   ├── Hooks.Tests.ps1        (20)  üç hook'un sözleşmesi
-│   └── Validate.Tests.ps1     (12)  validate.ps1 hata/uyarı ayrımı
+│   └── Validate.Tests.ps1     (18)  hata/uyarı ayrımı, hook bütünlüğü, sızıntı
 ├── docs/                      ← agent koşularının ham çıktıları (kanıt)
 │   ├── README.md
 │   ├── context-audit-2026-08-03.md

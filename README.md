@@ -73,9 +73,21 @@ başarısızlıkları gürültüye çevirir:
 | `.ps1` dosyalarında BOM | Yoksa PowerShell 5.1 parse hatası verir |
 | `.ps1` sözdizimi | Çalıştırmadan yakalar |
 | Kaynak ↔ kurulu kopya senkronu | En sık hata: düzenleyip `install.ps1`'i unutmak |
-| Testler | Pester takımı yeşil mi |
+| **Hook bütünlüğü** | `settings.json` geçerli mi, her hook script'i yerinde mi |
+| **Sızıntı taraması** | Repoda API anahtarı / özel anahtar deseni var mı |
+| Testler | Pester takımı yeşil mi (48 test) |
 
 Hata çıkış kodunu 1 yapar, uyarı yapmaz. CI bu ayrımı kullanır.
+
+**Hook bütünlüğü neden ayrı bir kontrol:** `settings.json`'da bir hook yolu
+yanlışsa Claude Code hata vermez — hook sadece çalışmaz. Zorlayıcı katman
+sessizce ortadan kalkar ve bunu fark etmenin başka yolu yoktur. Kontrol
+`$CLAUDE_PROJECT_DIR` değişkenini çözerek her script'in gerçekten var olduğunu
+doğrular.
+
+**Sızıntı taramasında bir incelik:** desenler kaynak kodda parçalı yazılmıştır
+(`"AKIA" + "[0-9A-Z]{16}"`). Tam hâlleriyle yazılsalardı `validate.ps1`'in
+kendisi her taramada kendi desenine takılırdı.
 
 > Not: `.ps1` dosyaları **BOM'lu UTF-8** kaydedilmeli. Windows PowerShell 5.1
 > BOM görmezse dosyayı ANSI sanır, Türkçe karakterler ve `—` parse hatasına yol
