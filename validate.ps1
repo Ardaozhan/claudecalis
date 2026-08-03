@@ -201,15 +201,20 @@ if (Test-Path $ClaudeHome) {
 
     # install.ps1'deki $Layers ile ayni liste. Yeni bir katman eklenirse iki
     # dosyada da guncellenmeli.
-    foreach ($Layer in @("agents", "commands", "conventions")) {
+    foreach ($Layer in @("agents", "commands", "conventions", "global")) {
         $Dir = Join-Path $RepoRoot $Layer
         if (-not (Test-Path $Dir)) { continue }
         foreach ($F in Get-ChildItem -Path $Dir -Filter "*.md" -File -EA SilentlyContinue) {
             # install.ps1 katmanin kendi README'sini kurmuyor; senkron da beklenmez.
             if ($F.Name -eq "README.md") { continue }
+
+            # global/ katmani ~/.claude kokune kuruluyor, alt dizine degil.
+            $Dst = if ($Layer -eq "global") { Join-Path $ClaudeHome $F.Name }
+                   else                     { Join-Path $ClaudeHome "$Layer\$($F.Name)" }
+
             $Pairs += @{
                 Src   = $F.FullName
-                Dst   = Join-Path $ClaudeHome "$Layer\$($F.Name)"
+                Dst   = $Dst
                 Label = "$Layer/$($F.Name)"
             }
         }

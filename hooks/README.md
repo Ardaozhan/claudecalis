@@ -13,7 +13,7 @@ hedefliyor.
 
 | Dosya | Olay | Ne yapar | Çıkış kodu |
 |---|---|---|---|
-| `protect-installed-copies.ps1` | PreToolUse (Write\|Edit) | `~/.claude/` altındaki kurulu kopyaya yazmayı **engeller** | 2 = engelle |
+| `protect-installed-copies.ps1` | PreToolUse (Write\|Edit) | Kurulu kopyaya yazmayı **engeller** | 2 = engelle |
 | `ensure-ps1-bom.ps1` | PostToolUse (Write\|Edit) | `.ps1` dosyasına eksik BOM'u geri koyar | 0 = sessiz düzeltme |
 | `validate-definition.ps1` | PostToolUse (Write\|Edit) | Yazılan agent/skill/command frontmatter'ını denetler | 2 = modele uyarı |
 
@@ -25,6 +25,25 @@ Kayıt yeri: `.claude/settings.json` → `hooks`.
 kurulu kopya `~/.claude/` altında. Kurulu kopya elle düzenlenirse bir sonraki
 `install.ps1` koşusu onu sessizce ezer. `CLAUDE.md` bunu kural olarak yazıyordu;
 artık teknik olarak mümkün değil.
+
+Korunanlar `install.ps1`'in `$Layers` dizisiyle aynı listedir:
+
+| Korunan | Tür |
+|---|---|
+| `~/.claude/agents/**` | dizin |
+| `~/.claude/commands/**` | dizin |
+| `~/.claude/conventions/**` | dizin |
+| `~/.claude/skills/**` | dizin |
+| `~/.claude/CLAUDE.md` | tek dosya (kök) |
+| `~/.claude/MINE.md` | tek dosya (kök) |
+
+Korunmayanlar: `~/.claude/projects/**/memory/` (kişisel notlar, kurulmuyor) ve
+`~/.claude/settings.json`. Kök dosya eşleşmesi **tam yol** karşılaştırmasıdır;
+`~/.claude/projects/x/CLAUDE.md` engellenmez.
+
+**Yeni bir katman eklendiğinde bu hook da güncellenmeli** — yoksa o katman
+korumasız kalır. Bu bir kez oldu: `conventions/` eklendiğinde hook'a
+eklenmemişti.
 
 **`ensure-ps1-bom`** — Windows PowerShell 5.1, BOM görmediği `.ps1` dosyasını
 ANSI sanar ve Türkçe karakterde parse hatası verir. Bu hata bu repoda **iki kez**

@@ -49,7 +49,14 @@ $Layers = @(
     @{ Source = "commands";    Target = "commands";    Pattern = "*.md" },
     # Exclude: katmanin kendi dokumantasyonu kurulmaz. README bir konvansiyon
     # degil; ~/.claude/conventions/ altinda isi yok.
-    @{ Source = "conventions"; Target = "conventions"; Pattern = "*.md"; Exclude = @("README.md") }
+    @{ Source = "conventions"; Target = "conventions"; Pattern = "*.md"; Exclude = @("README.md") },
+
+    # Kullanici seviyesi dosyalar dogrudan ~/.claude/ kokune gider.
+    # Bunlar (CLAUDE.md, MINE.md) daha once versiyon kontrolu disindaydi ve
+    # elle duzenleniyordu; artik diger her sey gibi kaynaktan kuruluyorlar.
+    # NOT: memory/ BU AKISA DAHIL DEGIL. Kisisel notlar paylasilan bir repoya
+    # girmez — bkz. templates/README.md.
+    @{ Source = "global"; Target = "."; Pattern = "*.md"; Exclude = @("README.md") }
 )
 
 $SkillSrc = Join-Path $RepoRoot "skills"

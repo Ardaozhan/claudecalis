@@ -101,14 +101,36 @@ Describe "hooks/protect-installed-copies.ps1" {
         (Invoke-Hook -HookPath $script:Protect -FilePath $Target) | Should Be 2
     }
 
+    It "kurulu conventions dizinini de korur" {
+        $Target = Join-Path $script:FakeClaude "conventions\typescript.md"
+        (Invoke-Hook -HookPath $script:Protect -FilePath $Target) | Should Be 2
+    }
+
+    It "koke kurulan CLAUDE.md dosyasini korur" {
+        # global/ katmani bunu ~/.claude kokune kuruyor; artik kurulu bir kopya.
+        $Target = Join-Path $script:FakeClaude "CLAUDE.md"
+        (Invoke-Hook -HookPath $script:Protect -FilePath $Target) | Should Be 2
+    }
+
+    It "koke kurulan MINE.md dosyasini korur" {
+        $Target = Join-Path $script:FakeClaude "MINE.md"
+        (Invoke-Hook -HookPath $script:Protect -FilePath $Target) | Should Be 2
+    }
+
     It "kaynak repodaki dosyaya dokunmaz (cikis kodu 0)" {
         $Target = Join-Path $script:RepoRoot "agents\spec-writer.md"
         (Invoke-Hook -HookPath $script:Protect -FilePath $Target) | Should Be 0
     }
 
-    It "~/.claude altindaki korumasiz dosyaya izin verir" {
-        # CLAUDE.md ve MINE.md korunan katmanlarin disinda; install.ps1 onlari uretmiyor.
-        $Target = Join-Path $script:FakeClaude "CLAUDE.md"
+    It "kurulmayan ~/.claude dosyalarina izin verir" {
+        # memory/ install.ps1 tarafindan uretilmiyor; kisisel notlar repoya girmiyor.
+        $Target = Join-Path $script:FakeClaude "projects\ornek\memory\not.md"
+        (Invoke-Hook -HookPath $script:Protect -FilePath $Target) | Should Be 0
+    }
+
+    It "adi benzeyen ama kok disindaki dosyayi engellemez" {
+        # ~/.claude/projects/.../CLAUDE.md korunan dosya DEGIL; sadece kok esiti.
+        $Target = Join-Path $script:FakeClaude "projects\ornek\CLAUDE.md"
         (Invoke-Hook -HookPath $script:Protect -FilePath $Target) | Should Be 0
     }
 

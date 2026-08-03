@@ -31,6 +31,9 @@ claudecalis/
 ├── conventions/               ← dil başına: tespit, komutlar, sahte yeşiller
 │   ├── typescript.md  python.md  java-kotlin.md  dotnet.md
 │   └── README.md
+├── global/                    ← ~/.claude köküne kurulanlar
+│   ├── CLAUDE.md              (kullanıcı seviyesi talimatlar)
+│   └── MINE.md                (elle yazılanların manifesti)
 ├── hooks/                     ← zorlayıcı katman (.claude/settings.json'a kayıtlı)
 │   ├── protect-installed-copies.ps1   (PreToolUse)
 │   ├── ensure-ps1-bom.ps1             (PostToolUse)
@@ -60,6 +63,7 @@ Dört dizinin dört farklı ömrü var:
 |---|---|---|
 | `agents/` `commands/` `skills/` | **Evet** | Claude Code onları sadece orada arar |
 | `conventions/` | **Evet** | Agent'lar her repoda çalışıyor; burada kalsa görünmezlerdi |
+| `global/` | **Evet** — `~/.claude/` **köküne** | Kullanıcı seviyesi dosyalar. `memory/` dahil değil: kişisel notlar paylaşılan repoya girmez |
 | `hooks/` | Hayır | `.claude/settings.json` mutlak yolla çağırıyor (proje seviyesinde deneniyor) |
 | `templates/` | Hayır | Gerçek iş repolarına elle kopyalanır |
 | `tests/` | Hayır | Sadece bu reponun kendi doğrulaması |

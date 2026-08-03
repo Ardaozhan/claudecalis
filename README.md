@@ -28,6 +28,7 @@ claudecalis/            ← kaynak (düzenleme burada yapılır)
   agents/               →  ~/.claude/agents/
   commands/             →  ~/.claude/commands/
   conventions/          →  ~/.claude/conventions/   (README.md hariç)
+  global/               →  ~/.claude/               (kökün kendisi)
   skills/               →  ~/.claude/skills/
   hooks/                →  kopyalanmaz; .claude/settings.json mutlak yolla çağırır
   templates/            →  kopyalanmaz; elle repolara düşürülür
