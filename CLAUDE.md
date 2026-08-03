@@ -31,8 +31,22 @@ claudecalis/
 ├── templates/
 │   ├── CLAUDE.md.template     ← gerçek repolara düşürülecek şablon
 │   └── README.md              ← şablon doldurma kuralları
+├── tests/
+│   └── Uninstall.Tests.ps1    ← Pester 3.4 testleri (install.ps1 -Uninstall)
+├── docs/                      ← agent koşularının ham çıktıları (kanıt)
+│   ├── README.md
+│   └── context-audit-*.md
 └── .claude/settings.json      ← proje seviyesi ayarlar
 ```
+
+Dört dizinin dört farklı ömrü var:
+
+| Dizin | `~/.claude/`'a kurulur mu | Neden |
+|---|---|---|
+| `agents/` `commands/` `skills/` | **Evet** | Claude Code onları sadece orada arar |
+| `templates/` | Hayır | Gerçek iş repolarına elle kopyalanır |
+| `tests/` | Hayır | Sadece bu reponun kendi doğrulaması |
+| `docs/` | Hayır | İnsan için kanıt arşivi |
 
 ## Kurallar
 

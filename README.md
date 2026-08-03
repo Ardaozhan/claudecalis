@@ -35,12 +35,19 @@ claudecalis/            ← kaynak (düzenleme burada yapılır)
 Kurulum:
 
 ```powershell
-.\install.ps1 -DryRun    # ne yapacağını göster, dosyaya dokunma
-.\install.ps1            # kur; farklı bir dosyanın üstüne yazacaksa önce yedekler
+.\install.ps1 -DryRun               # ne yapacağını göster, dosyaya dokunma
+.\install.ps1                       # kur; üstüne yazacaksa önce yedekler
+.\install.ps1 -Uninstall -DryRun    # ne kaldıracağını göster
+.\install.ps1 -Uninstall            # kurduklarını geri kaldır
 ```
 
 Script aynı içerikli dosyayı atlar, farklı olanı `~/.claude/backups/install-<tarih>/`
 altına yedekler. Kurulumdan sonra **Claude Code yeniden başlatılmalı.**
+
+`-Uninstall` yalnızca **bu repoda ismi bulunan** dosyaları hedefler; `~/.claude`
+tarafında hiç tarama yapmaz. ECC paketinin 28 agent / 46 skill / 60 command'ı bu
+tasarımda silinemez — repoda karşılıkları yok. Hedefteki dosya repodakinden
+farklıysa (elle düzenlenmişse) silinmez, "Korundu" diye işaretlenir.
 
 > Not: `.ps1` dosyaları **BOM'lu UTF-8** kaydedilmeli. Windows PowerShell 5.1
 > BOM görmezse dosyayı ANSI sanır, Türkçe karakterler ve `—` parse hatasına yol
