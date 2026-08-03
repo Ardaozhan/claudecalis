@@ -93,10 +93,41 @@ Bu dosya git'e girer, yani takımın tamamını etkiler. Ne eklediğini kullanı
 
 ## Adım 5 — Doğrula
 
-Yazdığın dosyadaki **her komutu çalıştır.** Çalışmayan komut şu üç şeyden biridir:
-yanlış yazılmış, yanlış dizinde çalıştırılıyor, ya da eksik kurulum.
+Yazdığın dosyadaki her komutu doğrula. **İki ayrı başarısızlık türü var ve
+karıştırılmamalı:**
 
-Çalıştıramadığın komutu dosyada bırakma — ya düzelt ya sil.
+**A. Komut yanlış** — script `package.json`'da tanımlı değil, hedef dosya yok,
+adı hatalı yazılmış. Bu bir kusurdur: düzelt ya da dosyadan çıkar.
+
+**B. Ortam yetersiz** — komut doğru ama bu makinede çalıştırılamıyor: araç kurulu
+değil (`pnpm`, `dotnet`, `gradle` yok), bağımlılıklar indirilmemiş, ağ yok.
+Bu komutun kusuru değildir. **Silme.** Raporunda "çalıştırılarak doğrulanmadı"
+diye işaretle ve sebebini yaz.
+
+Bu ayrımı yapmazsan doğru komutları silersin. Gerçek bir vaka: hedef repo pnpm
+kullanıyordu, komutlar CI tarafından zaten koşuluyordu, ama kurulum makinesinde
+pnpm yoktu. "Çalıştıramadığını sil" kuralı harfiyen uygulansa altı doğru komut
+birden silinecekti.
+
+### Her zaman yapılabilen statik doğrulamalar
+
+Araç kurulu olmasa bile bunlar kontrol edilir:
+
+- Yazdığın her script adı proje tanım dosyasında (`package.json` → `scripts`,
+  `pyproject.toml`, `*.csproj`) gerçekten var mı
+- Script'in referans verdiği dosyalar mevcut mu — örneğin
+  `tsc -p tsconfig.build.json` yazıyorsa o dosya repoda var mı
+- CI workflow'unda geçen komutlarla yazdıkların çelişiyor mu
+- `README` ile lock dosyası çelişiyor mu (lock dosyası kazanır)
+
+Bu kontroller gerçek kusur bulur: yukarıdaki vakada `build` scriptinin var olmayan
+bir `tsconfig.build.json` aradığı böyle ortaya çıktı.
+
+### Raporlama
+
+Kapanış tablosunda doğrulanan komut sayısını **iki ayrı sayı** olarak ver:
+kaçı statik olarak doğrulandı, kaçı gerçekten çalıştırıldı. Çalıştırılmamış bir
+komutu çalıştırılmış gibi gösterme.
 
 ## Kapanış
 

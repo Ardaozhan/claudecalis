@@ -27,9 +27,13 @@ git'e giren kaynak, `~/.claude/` ise kurulmuş hâli.
 claudecalis/            ← kaynak (düzenleme burada yapılır)
   agents/               →  ~/.claude/agents/
   commands/             →  ~/.claude/commands/
+  conventions/          →  ~/.claude/conventions/   (README.md hariç)
   skills/               →  ~/.claude/skills/
+  hooks/                →  kopyalanmaz; .claude/settings.json mutlak yolla çağırır
   templates/            →  kopyalanmaz; elle repolara düşürülür
+  tests/  docs/         →  kopyalanmaz; reponun kendi doğrulaması ve kanıtı
   install.ps1           ← kopyalamayı yapan script
+  validate.ps1          ← yapının kendi denetimi
 ```
 
 Kurulum:

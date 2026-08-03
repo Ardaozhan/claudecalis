@@ -1,7 +1,10 @@
 ﻿# claudecalis kurulum scripti (Windows / PowerShell)
 #
-# Bu repodaki agent, skill ve command dosyalarını ~/.claude/ altına kopyalar.
-# Mevcut dosyaların üzerine yazmadan önce yedek alır.
+# Bu repodaki agent, command, convention ve skill dosyalarını ~/.claude/ altına
+# kopyalar. Mevcut dosyaların üzerine yazmadan önce yedek alır.
+#
+# Kopyalanan katmanlar $Layers dizisinde ve altındaki skills blogunda tanımlı.
+# Yeni bir katman eklenirse validate.ps1'deki senkron kontrolü de guncellenmeli.
 #
 # Kullanım:
 #   .\install.ps1                        → kur

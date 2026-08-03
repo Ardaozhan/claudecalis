@@ -43,11 +43,14 @@ claudecalis/
 ├── templates/
 │   ├── CLAUDE.md.template     ← gerçek repolara düşürülecek şablon
 │   └── README.md              ← şablon doldurma kuralları
-├── tests/
-│   └── Uninstall.Tests.ps1    ← Pester 3.4 testleri (install.ps1 -Uninstall)
+├── tests/                     ← Pester 3.4, toplam 42 test
+│   ├── Uninstall.Tests.ps1    (10)  install.ps1 -Uninstall davranışı
+│   ├── Hooks.Tests.ps1        (20)  üç hook'un sözleşmesi
+│   └── Validate.Tests.ps1     (12)  validate.ps1 hata/uyarı ayrımı
 ├── docs/                      ← agent koşularının ham çıktıları (kanıt)
 │   ├── README.md
-│   └── context-audit-*.md
+│   ├── context-audit-2026-08-03.md
+│   └── pipeline-run-2026-08-03.md
 └── .claude/settings.json      ← proje seviyesi ayarlar
 ```
 
@@ -97,7 +100,7 @@ Bu repoda ikisi de yaşandı, ikisi de saatler yedi:
   bir `Char` olur ve `Trim()` metodu yoktur. `@(...)` ile sarmala.
 - Yeni bir kavram öğrenildiğinde onu gösteren **en küçük** örnek eklenir. Örnek
   büyürse ayrı bir projeye taşınır.
-- Bu klasör henüz bir git deposu değil. Kalıcı hale getirilecekse `git init`.
+- Her değişiklik commit'lenir. Bir commit tek bir işi anlatır.
 
 ## Deney Yaparken
 
@@ -108,14 +111,30 @@ Bu repoda ikisi de yaşandı, ikisi de saatler yedi:
 
 ## Bilinen Durum
 
-- 2026-08-03'te sıfırdan kuruldu.
-- 2026-08-03: 4 agent'lık özellik hattı + `/feature` command yazıldı ve
-  `install.ps1` ile `~/.claude/` altına kuruldu. Doğrulandı: 5 agent ve
-  `feature.md` yerinde.
-- `~/.claude/rules/` altındaki common kuralları her session'da otomatik yükleniyor;
-  ciddi bir token maliyeti. **Henüz ölçülmedi** — `context-auditor` agent'ı ya da
-  `/context` ile ölçülmeli.
-- Yazılan agent'ların hiçbiri **henüz gerçek bir işte denenmedi.** Bir sonraki
-  adım: küçük bir işte `/feature` hattını uçtan uca çalıştırıp sonucu buraya
-  not düşmek.
-- `docs/` dizini boş. Doldurulacak ya da silinecek.
+- 2026-08-03'te sıfırdan kuruldu, aynı gün git'e alındı.
+- **Her parça en az bir kez gerçekten çalıştırıldı.** Kanıtlar `docs/` altında.
+  - `/feature` hattı uçtan uca koştu (`install.ps1 -Uninstall` işiyle) → ŞARTLI GEÇTİ
+  - `context-auditor` iki kez koştu
+  - `/bootstrap` gerçekçi bir TS reposunda koştu; yanlış README ve kırık build
+    scriptini yakaladı
+  - Hook'lar canlı tetiklenerek doğrulandı (BOM eklendi, yazma engellendi)
+- **Context maliyeti ölçüldü: ~11.000 token.** Dağılım: memory + `rules/` %55,
+  agent metadata %24, skill metadata %21. `conventions/` ve command'lar %0 —
+  otomatik yüklenmiyorlar.
+- Açık kalan iyileştirme: `~/.claude/rules/README.md` (~1.100 token) her session'da
+  yükleniyor ama sadece kurulum rehberi; davranış kuralı içermiyor. `rules/`
+  kökünden taşınırsa kazanç net.
+
+## Bu Repoda Öğrenilen İki Kural
+
+**Yazılmış olmak çalışmak değildir.** Bu repoda dört kez kanıtlandı: `install.ps1`
+ilk çalıştırmada parse hatasıyla patladı; `context-auditor` ilk koşusunda emin bir
+dille yanlış cevap verdi; `test-first`'ün yazdığı testler yanlış sebepten kırmızıydı;
+`validate.ps1` kendi negatif testinde çöktü. Dördü de yazıldıklarında doğru
+görünüyordu.
+
+**Subagent'a ana context hakkında soru sorulmaz.** Kendi penceresinde çalışır,
+ana thread'in context'ini göremez. `context-auditor` ilk koşusunda "bu dosyalar
+yüklenmiyor" dedi çünkü dosya sistemine bakıp çıkarım yapmak zorundaydı. İkinci
+koşuda göremediği bilgi kendisine verildi ve doğru cevap verdi — üstelik ilk
+koşunun kaçırdığı bir kalemi de buldu.
