@@ -12,6 +12,7 @@ denemede parse hatasıyla patladı. O yüzden her agent'ın en az bir gerçek ko
 | Dosya | Ne | Tarih |
 |---|---|---|
 | `context-audit-2026-08-03.md` | `context-auditor` ilk koşu — kurulumun token maliyeti | 2026-08-03 |
+| `pipeline-run-2026-08-03.md` | `/feature` hattının ilk uçtan uca koşusu — 5 adım, ŞARTLI GEÇTİ | 2026-08-03 |
 
 ## Kural
 

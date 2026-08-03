@@ -94,10 +94,18 @@ function Copy-RepoSkillToFake {
 function Invoke-InstallUnderTest {
     param([string[]]$Arguments = @())
 
+    # DIKKAT: dizi splatlamasi (@Arguments, $Arguments bir string[] iken) named
+    # switch parametrelerini BAGLAMAZ. PowerShell degerleri positional arguman
+    # olarak gecirir, $args'a duserler ve [switch]$Uninstall False kalir.
+    # Dogru yol hashtable splatlamasidir. Bu hata bir kez yasandi ve 9 testin
+    # yanlis sebepten kirmizi gorunmesine yol acti.
+    $Splat = @{}
+    foreach ($Arg in $Arguments) { $Splat[$Arg.TrimStart('-')] = $true }
+
     $CapturedOutput = ""
     $CaughtError = $null
     try {
-        $CapturedOutput = (& $script:InstallScriptPath @Arguments *>&1 | Out-String)
+        $CapturedOutput = (& $script:InstallScriptPath @Splat *>&1 | Out-String)
     } catch {
         $CaughtError = $_
     }

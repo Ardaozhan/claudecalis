@@ -55,8 +55,20 @@ Dört dizinin dört farklı ömrü var:
 - Elle yazılan agent/skill/command **burada** yazılır, `install.ps1` ile kurulur,
   `MINE.md`'ye satır eklenir. `~/.claude/` altındaki kopya elle düzenlenmez —
   bir sonraki kurulumda üzerine yazılır.
+- Bir commit tek bir işi anlatır. Dokümantasyon değişikliği özellik commit'ine
+  karıştırılmaz — `change-reviewer` bunu bulgu olarak işaretliyor.
+
+## PowerShell Tuzakları
+
+Bu repoda ikisi de yaşandı, ikisi de saatler yedi:
+
 - `.ps1` dosyaları **BOM'lu UTF-8** kaydedilir. Windows PowerShell 5.1 BOM'suz
-  dosyayı ANSI sanar; `—` ve Türkçe karakterler parse hatası verir.
+  dosyayı ANSI sanar; `—` ve Türkçe karakterler parse hatası verir. Write/Edit
+  araçları BOM yazmaz — düzenledikten sonra BOM'u geri koy.
+- Script'e switch geçirirken **hashtable splatlaması** kullan. Dizi splatlaması
+  (`& $script @stringArray`) named parametre bağlamaz; değerler positional
+  argümana dönüşüp `$args`'a düşer ve switch sessizce `$false` kalır. Hata
+  vermez — bu yüzden fark edilmesi zordur.
 - Yeni bir kavram öğrenildiğinde onu gösteren **en küçük** örnek eklenir. Örnek
   büyürse ayrı bir projeye taşınır.
 - Bu klasör henüz bir git deposu değil. Kalıcı hale getirilecekse `git init`.
