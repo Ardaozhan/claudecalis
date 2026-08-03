@@ -49,6 +49,30 @@ tarafında hiç tarama yapmaz. ECC paketinin 28 agent / 46 skill / 60 command'ı
 tasarımda silinemez — repoda karşılıkları yok. Hedefteki dosya repodakinden
 farklıysa (elle düzenlenmişse) silinmez, "Korundu" diye işaretlenir.
 
+## Doğrulama
+
+```powershell
+.\validate.ps1              # tam denetim (testler dahil)
+.\validate.ps1 -SkipTests   # sadece statik kontroller
+```
+
+Bozuk bir agent/skill dosyası Claude Code tarafından **sessizce yok sayılır** —
+hata vermez, sadece o parça hiç çalışmaz. `validate.ps1` o sessiz
+başarısızlıkları gürültüye çevirir:
+
+| Kontrol | Neden önemli |
+|---|---|
+| Frontmatter geçerli mi | Bozuksa dosya hiç tanınmaz |
+| `name` ↔ dosya adı | Uyuşmazsa agent çağrılamaz |
+| `description` var mı, uzunluğu makul mü | Routing'i tek başına bu alan belirler |
+| `tools` adları tanınıyor mu | Yazım hatası = sessiz yetki kaybı |
+| `.ps1` dosyalarında BOM | Yoksa PowerShell 5.1 parse hatası verir |
+| `.ps1` sözdizimi | Çalıştırmadan yakalar |
+| Kaynak ↔ kurulu kopya senkronu | En sık hata: düzenleyip `install.ps1`'i unutmak |
+| Testler | Pester takımı yeşil mi |
+
+Hata çıkış kodunu 1 yapar, uyarı yapmaz. CI bu ayrımı kullanır.
+
 > Not: `.ps1` dosyaları **BOM'lu UTF-8** kaydedilmeli. Windows PowerShell 5.1
 > BOM görmezse dosyayı ANSI sanır, Türkçe karakterler ve `—` parse hatasına yol
 > açar.

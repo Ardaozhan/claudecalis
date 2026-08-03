@@ -18,6 +18,7 @@ claudecalis/
 ├── CLAUDE.md                  ← bu dosya: proje seviyesi memory
 ├── README.md                  ← yapının açıklaması (insan için)
 ├── install.ps1                ← agents/ commands/ skills/ → ~/.claude/
+├── validate.ps1               ← yapının kendi denetimi (CI'ın çalıştırdığı)
 ├── agents/
 │   ├── spec-writer.md         ← özellik hattı 1/4
 │   ├── impl-planner.md        ← özellik hattı 2/4
