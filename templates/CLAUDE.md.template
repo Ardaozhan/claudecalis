@@ -1,0 +1,74 @@
+# <PROJE_ADI>
+
+> **Şablon kullanımı:** Bu dosyayı gerçek reponun köküne `CLAUDE.md` adıyla
+> kopyala, `<...>` yerlerini doldur, **doldurmadığın bölümü sil.** Boş bırakılan
+> başlık, doğru bilgiden daha zararlıdır — model onu ciddiye alır.
+>
+> Bu satırı ve yukarıdaki alıntı bloğunu kopyaladıktan sonra sil.
+
+## Bu Proje Ne Yapar
+
+<İki-üç cümle. README'yi kopyalama; modelin bilmesi gereken ÖZ ne ise onu yaz.>
+
+## Teknoloji
+
+- Dil / sürüm: <örn. TypeScript 5.6, Node 22>
+- Framework: <örn. Next.js 15 App Router>
+- Veritabanı: <örn. PostgreSQL 16 + Prisma>
+- Paket yöneticisi: <örn. pnpm — npm KULLANMA>
+
+## Komutlar
+
+Modelin tahmin etmesini istemediğin her komut buraya. En sık düşülen tuzak budur.
+
+| Amaç | Komut |
+|---|---|
+| Kurulum | `<...>` |
+| Geliştirme sunucusu | `<...>` |
+| Unit test | `<...>` |
+| Tek dosya test | `<...>` |
+| Lint | `<...>` |
+| Tip kontrolü | `<...>` |
+| Build | `<...>` |
+
+## Dizin Yapısı
+
+Sadece **tahmin edilemeyecek** olanları yaz. `src/components` gibi bariz şeyleri
+listeleme; context israfı olur.
+
+```
+<yol>/    ← <neden burada, ne kuralı var>
+```
+
+## Bu Projeye Özel Kurallar
+
+Genel kodlama kuralları `~/.claude/rules/` altında; burada **sadece bu repoda
+farklı olan** şeyleri yaz.
+
+- <örn. "Tüm API yanıtları `src/lib/envelope.ts` içindeki zarfı kullanır.">
+- <örn. "Migration'lar elle yazılmaz, `pnpm db:generate` üretir.">
+- <örn. "`legacy/` klasörüne dokunma — ayrı ekip sahibi.">
+
+## Yapma
+
+Sınırları açıkça yaz. Model bilmediği sınırı ihlal eder.
+
+- <örn. "Prod veritabanına bağlanan hiçbir komut çalıştırma.">
+- <örn. "`main` branch'e doğrudan commit atma.">
+- <örn. "`.env` dosyalarını okuma veya yazdırma.">
+
+## Kabul Kriteri
+
+Bir işi "bitti" saymadan önce şunlar geçmeli:
+
+1. <örn. `pnpm test` yeşil>
+2. <örn. `pnpm typecheck` hatasız>
+3. <örn. `pnpm lint` uyarısız>
+
+## Bağlam Notları
+
+Koddan okunamayacak, ama bilinmesi gereken şeyler:
+
+- <örn. "Ödeme entegrasyonu 2026-09'da Stripe'a taşınacak, yeni kod Iyzico'ya
+  bağımlılık eklemesin.">
+- <örn. "Staging ortamı Cuma günleri sıfırlanır.">
