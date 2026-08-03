@@ -48,7 +48,25 @@ okuyamazsa, yol bulamazsa veya beklenmedik bir durumla karşılaşırsa `exit 0`
 ile sessizce çekilir. Bozuk bir hook'un işi durdurması, hiç hook olmamasından
 kötüdür.
 
+## Bilinen sınır
+
+`protect-installed-copies` yalnızca **Write ve Edit tool'larını** yakalar.
+Kabuktan yapılan yazma (`Bash`, `PowerShell` tool'ları üzerinden
+`Copy-Item`, `Set-Content`, `>` yönlendirmesi) bu hook'un kapsamı dışında ve
+kurulu kopyayı değiştirebilir.
+
+Bilinçli bir tercih: kabuk komutlarını güvenilir biçimde ayrıştırmak, komut
+metninden hedef yolu çıkarmayı gerektirir ve bu kaçınılmaz olarak hem yanlış
+engellemelere hem de kolayca atlatılan bir filtreye yol açar. Hook'un işi
+**kazayla yapılan** düzenlemeyi durdurmak; kararlı bir atlatmayı engellemek
+değil.
+
+Kaynak ↔ kurulu kopya farkı yine de yakalanır: `validate.ps1` hash karşılaştırması
+yapıp uyarı verir.
+
 ## Test
+
+`tests/Hooks.Tests.ps1` — 20 test, `validate.ps1` ve CI tarafından koşuluyor.
 
 Hook'lar stdin'den JSON okur, yani `powershell.exe -File` ile doğrudan
 sınanabilirler:

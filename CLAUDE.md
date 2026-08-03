@@ -86,6 +86,15 @@ Bu repoda ikisi de yaşandı, ikisi de saatler yedi:
   (`& $script @stringArray`) named parametre bağlamaz; değerler positional
   argümana dönüşüp `$args`'a düşer ve switch sessizce `$false` kalır. Hata
   vermez — bu yüzden fark edilmesi zordur.
+- Bir **native komutun** (`powershell.exe`, `git`, `dotnet`) stderr'ini
+  yönlendirirken (`2>$null`, `2>&1`) çağıranın `$ErrorActionPreference`
+  değerine dikkat et. PowerShell 5.1 her stderr satırını `NativeCommandError`
+  kaydına sarar; tercih `Stop` ise bu sonlandırıcı hataya döner ve komut doğru
+  çalıştığı hâlde kod patlar. Böyle bir çağrıyı yapan fonksiyon, tercihi
+  **kendi içinde** `Continue`'ya çekip `finally` ile geri koymalı — çağıranın
+  ayarına güvenme.
+- Tek satırlık dosyada `Get-Content` dizi değil **string** döndürür; `$Lines[0]`
+  bir `Char` olur ve `Trim()` metodu yoktur. `@(...)` ile sarmala.
 - Yeni bir kavram öğrenildiğinde onu gösteren **en küçük** örnek eklenir. Örnek
   büyürse ayrı bir projeye taşınır.
 - Bu klasör henüz bir git deposu değil. Kalıcı hale getirilecekse `git init`.

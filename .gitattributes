@@ -1,0 +1,19 @@
+# Satir sonu politikasi.
+#
+# Bu repo Windows hedefliyor ama git'e LF ile giriyor. Politika acikca
+# yazilmazsa her makinede core.autocrlf ayarina gore farkli davranir ve
+# gereksiz diff gurultusu uretir.
+
+* text=auto
+
+# PowerShell: calisma agacinda CRLF. PowerShell 5.1 LF'li dosyalari calistirir
+# ama bazi araclar (ISE, imzalama) CRLF bekler; tutarli olmak ucuz.
+*.ps1  text eol=crlf
+*.psm1 text eol=crlf
+*.psd1 text eol=crlf
+
+# Markdown ve YAML platform bagimsiz kalir.
+*.md   text eol=lf
+*.yml  text eol=lf
+*.yaml text eol=lf
+*.json text eol=lf

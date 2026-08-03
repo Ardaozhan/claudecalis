@@ -44,7 +44,9 @@ if (-not (Test-Path $ClaudeHome)) {
 $Layers = @(
     @{ Source = "agents";      Target = "agents";      Pattern = "*.md" },
     @{ Source = "commands";    Target = "commands";    Pattern = "*.md" },
-    @{ Source = "conventions"; Target = "conventions"; Pattern = "*.md" }
+    # Exclude: katmanin kendi dokumantasyonu kurulmaz. README bir konvansiyon
+    # degil; ~/.claude/conventions/ altinda isi yok.
+    @{ Source = "conventions"; Target = "conventions"; Pattern = "*.md"; Exclude = @("README.md") }
 )
 
 $SkillSrc = Join-Path $RepoRoot "skills"
@@ -65,6 +67,8 @@ if ($Uninstall) {
         }
 
         foreach ($File in Get-ChildItem -Path $SrcDir -Filter $Layer.Pattern -File) {
+            if ($Layer.Exclude -and ($Layer.Exclude -contains $File.Name)) { continue }
+
             $Dst = Join-Path $DstDir $File.Name
 
             if (-not (Test-Path $Dst)) {
@@ -178,6 +182,8 @@ if ($Uninstall) {
         }
 
         foreach ($File in Get-ChildItem -Path $SrcDir -Filter $Layer.Pattern -File) {
+            if ($Layer.Exclude -and ($Layer.Exclude -contains $File.Name)) { continue }
+
             $Dst = Join-Path $DstDir $File.Name
 
             if (Test-Path $Dst) {

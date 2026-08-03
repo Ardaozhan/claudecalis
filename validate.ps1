@@ -205,6 +205,8 @@ if (Test-Path $ClaudeHome) {
         $Dir = Join-Path $RepoRoot $Layer
         if (-not (Test-Path $Dir)) { continue }
         foreach ($F in Get-ChildItem -Path $Dir -Filter "*.md" -File -EA SilentlyContinue) {
+            # install.ps1 katmanin kendi README'sini kurmuyor; senkron da beklenmez.
+            if ($F.Name -eq "README.md") { continue }
             $Pairs += @{
                 Src   = $F.FullName
                 Dst   = Join-Path $ClaudeHome "$Layer\$($F.Name)"
