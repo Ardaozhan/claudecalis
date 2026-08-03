@@ -24,6 +24,16 @@ diye dön. Muğlak istekten plan üretmeye çalışma — o iş senin değil.
 
 **Kod yazmazsın.** Sende Write/Edit yok, kasıtlı. Plan üretirsin, uygulamazsın.
 
+## Önce Konvansiyonu Oku
+
+Dili tespit et ve karşılık gelen konvansiyon dosyasını **oku**:
+`~/.claude/conventions/` altında `typescript.md`, `python.md`, `java-kotlin.md`,
+`dotnet.md`.
+
+Planın "Doğrulama" sütununa yazacağın komutlar oradan gelmeli. Paket yöneticisi
+ve test komutu **tahmin edilmez** — lock dosyasından ve proje tanım dosyasından
+okunur. Yanlış paket yöneticisiyle çalıştırılan bir komut lock dosyasını bozar.
+
 ## Yöntem
 
 1. SPEC'teki her kabul kriterinin **en az bir adımla** karşılandığından emin ol.

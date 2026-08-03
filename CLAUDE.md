@@ -26,7 +26,18 @@ claudecalis/
 │   ├── change-reviewer.md     ← özellik hattı 4/4
 │   └── context-auditor.md     ← bağımsız: context maliyeti denetçisi
 ├── commands/
-│   └── feature.md             ← /feature — hattı yürüten command
+│   ├── feature.md             ← /feature — hattı yürüten command
+│   └── bootstrap.md           ← /bootstrap — iş reposuna CLAUDE.md kurar
+├── conventions/               ← dil başına: tespit, komutlar, sahte yeşiller
+│   ├── typescript.md  python.md  java-kotlin.md  dotnet.md
+│   └── README.md
+├── hooks/                     ← zorlayıcı katman (.claude/settings.json'a kayıtlı)
+│   ├── protect-installed-copies.ps1   (PreToolUse)
+│   ├── ensure-ps1-bom.ps1             (PostToolUse)
+│   ├── validate-definition.ps1        (PostToolUse)
+│   └── README.md
+├── .github/workflows/
+│   └── validate.yml           ← CI: windows-latest üzerinde validate.ps1
 ├── skills/
 │   └── memory-hygiene/SKILL.md
 ├── templates/
@@ -45,9 +56,14 @@ Dört dizinin dört farklı ömrü var:
 | Dizin | `~/.claude/`'a kurulur mu | Neden |
 |---|---|---|
 | `agents/` `commands/` `skills/` | **Evet** | Claude Code onları sadece orada arar |
+| `conventions/` | **Evet** | Agent'lar her repoda çalışıyor; burada kalsa görünmezlerdi |
+| `hooks/` | Hayır | `.claude/settings.json` mutlak yolla çağırıyor (proje seviyesinde deneniyor) |
 | `templates/` | Hayır | Gerçek iş repolarına elle kopyalanır |
 | `tests/` | Hayır | Sadece bu reponun kendi doğrulaması |
 | `docs/` | Hayır | İnsan için kanıt arşivi |
+
+`conventions/` context'e otomatik **yüklenmez** — agent onları `Read` ile okur.
+Yani dil eklemek her session'a bedel bindirmez.
 
 ## Kurallar
 

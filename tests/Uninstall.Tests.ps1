@@ -25,7 +25,9 @@ $script:InstallScriptPath = Join-Path $script:RepoRoot "install.ps1"
 $script:RepoAgentsDir     = Join-Path $script:RepoRoot "agents"
 $script:RepoCommandsDir   = Join-Path $script:RepoRoot "commands"
 $script:RepoSkillsDir     = Join-Path $script:RepoRoot "skills"
-$script:RealClaudeHome    = "C:\Users\ardao\.claude"
+# Gercek hedef, fixture USERPROFILE'i degistirmeden ONCE hesaplanir. Sabit yol
+# yazilmaz: CI'da ve baska makinelerde guard anlamsiz hale gelirdi.
+$script:RealClaudeHome    = Join-Path $env:USERPROFILE ".claude"
 
 if (-not (Test-Path $script:InstallScriptPath)) {
     throw "install.ps1 bulunamadi: $script:InstallScriptPath"

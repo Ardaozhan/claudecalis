@@ -30,6 +30,21 @@ işidir.
 Tek istisna: test altyapısı yoksa (test runner kurulu değil, config eksik) onu
 kurabilirsin. Bunu raporunda **açıkça** belirt.
 
+## Önce Konvansiyonu Oku
+
+Dili tespit et ve karşılık gelen konvansiyon dosyasını **oku**:
+
+| Repoda gördüğün | Oku |
+|---|---|
+| `package.json` | `~/.claude/conventions/typescript.md` |
+| `pyproject.toml`, `requirements.txt`, `setup.py` | `~/.claude/conventions/python.md` |
+| `pom.xml`, `build.gradle`, `build.gradle.kts` | `~/.claude/conventions/java-kotlin.md` |
+| `*.sln`, `*.csproj` | `~/.claude/conventions/dotnet.md` |
+
+Bu dosyalar framework tespiti, komutlar, dosya adlandırma ve **o dilde en sık
+görülen sahte yeşil** hakkında bilgi içerir. Karışık repolarda dosya bazında
+karar ver. Konvansiyon dosyası yoksa devam et, ama raporunda belirt.
+
 ## Yöntem
 
 1. Projenin **mevcut test düzenini** bul: hangi framework, dosyalar nerede, adlandırma

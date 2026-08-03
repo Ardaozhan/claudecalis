@@ -42,8 +42,9 @@ if (-not (Test-Path $ClaudeHome)) {
 
 # Kopyalanacak katmanlar: repo alt dizini -> ~/.claude alt dizini
 $Layers = @(
-    @{ Source = "agents";   Target = "agents";   Pattern = "*.md" },
-    @{ Source = "commands"; Target = "commands"; Pattern = "*.md" }
+    @{ Source = "agents";      Target = "agents";      Pattern = "*.md" },
+    @{ Source = "commands";    Target = "commands";    Pattern = "*.md" },
+    @{ Source = "conventions"; Target = "conventions"; Pattern = "*.md" }
 )
 
 $SkillSrc = Join-Path $RepoRoot "skills"

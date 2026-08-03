@@ -198,11 +198,19 @@ foreach ($Ps1 in Get-ChildItem -Path $RepoRoot -Filter "*.ps1" -File -Recurse) {
 if (-not $Quiet) { Write-Host "Kaynak <-> kurulu kopya" -ForegroundColor White }
 if (Test-Path $ClaudeHome) {
     $Pairs = @()
-    foreach ($F in Get-ChildItem -Path $AgentDir -Filter "*.md" -File -EA SilentlyContinue) {
-        $Pairs += @{ Src = $F.FullName; Dst = Join-Path $ClaudeHome "agents\$($F.Name)"; Label = "agents/$($F.Name)" }
-    }
-    foreach ($F in Get-ChildItem -Path $CmdDir -Filter "*.md" -File -EA SilentlyContinue) {
-        $Pairs += @{ Src = $F.FullName; Dst = Join-Path $ClaudeHome "commands\$($F.Name)"; Label = "commands/$($F.Name)" }
+
+    # install.ps1'deki $Layers ile ayni liste. Yeni bir katman eklenirse iki
+    # dosyada da guncellenmeli.
+    foreach ($Layer in @("agents", "commands", "conventions")) {
+        $Dir = Join-Path $RepoRoot $Layer
+        if (-not (Test-Path $Dir)) { continue }
+        foreach ($F in Get-ChildItem -Path $Dir -Filter "*.md" -File -EA SilentlyContinue) {
+            $Pairs += @{
+                Src   = $F.FullName
+                Dst   = Join-Path $ClaudeHome "$Layer\$($F.Name)"
+                Label = "$Layer/$($F.Name)"
+            }
+        }
     }
     foreach ($D in Get-ChildItem -Path $SkillDir -Directory -EA SilentlyContinue) {
         $S = Join-Path $D.FullName "SKILL.md"

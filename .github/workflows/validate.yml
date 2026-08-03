@@ -1,0 +1,39 @@
+name: validate
+
+# Yapinin kendi denetimi. validate.ps1 statik kontrolleri ve Pester takimini
+# calistirir; HATA bulursa cikis kodu 1 doner ve is basarisiz olur. UYARI
+# cikis kodunu etkilemez.
+#
+# windows-latest sart: script Windows PowerShell 5.1 hedefliyor ve
+# kontrollerden biri (.ps1 BOM denetimi) tam olarak o surumun davranisini
+# koruyor. Linux uzerinde pwsh ile calistirmak bu kontrolu anlamsizlastirir.
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  validate:
+    runs-on: windows-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Ortam bilgisi
+        shell: powershell
+        run: |
+          "PowerShell : $($PSVersionTable.PSVersion)"
+          $Pester = Get-Module -ListAvailable -Name Pester |
+                    Sort-Object Version -Descending | Select-Object -First 1
+          if ($Pester) { "Pester     : $($Pester.Version)" }
+          else         { "Pester     : KURULU DEGIL" }
+
+      # CI'da ~/.claude yok, dolayisiyla "kaynak <-> kurulu kopya" kontrolu
+      # UYARI uretir. Bu beklenen durumdur ve cikis kodunu etkilemez.
+      - name: Dogrulama
+        shell: powershell
+        run: |
+          .\validate.ps1
+          exit $LASTEXITCODE
