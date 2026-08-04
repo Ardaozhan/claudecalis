@@ -1,7 +1,10 @@
+
+
+
 # claudecalis
 
-Claude Code'un **memory** ve **context** yapılarının merkezi. İki işi var:
-öğrenmek ve gerçek iş repolarına şablon sağlamak.
+Claude Code'un **memory** ve **context** yapılarını uygulayarak öğrenmek için
+kurulmuş bir laboratuvar. Ürün kodu yok; her dosya bir kavramı gösteriyor.
 
 ## Katmanlar
 
@@ -9,165 +12,42 @@ Claude Code'da bilgi dört ayrı yerde durur. Farkı bilmek işin özü:
 
 | Katman | Yer | Ne zaman yüklenir | Ömrü |
 |---|---|---|---|
-| Kullanıcı memory | `~/.claude/CLAUDE.md` | Her session, tam | Kalıcı, tüm projeler |
-| Proje memory | `<repo>/CLAUDE.md` | Her session, tam | Kalıcı, git'e girer |
+| Kullanıcı memory | `~/.claude/CLAUDE.md` | Her session, tam | Kalıcı |
+| Proje memory | `./CLAUDE.md` | Her session, tam | Kalıcı, git'e girer |
 | Dosya memory | `~/.claude/projects/<slug>/memory/*.md` | İhtiyaç halinde | Kalıcı, kişisel |
 | Context | RAM | — | Session bitince gider |
 
 Kritik ayrım: **memory hatırlama değildir.** Model hiçbir şey hatırlamaz. Memory,
 her session başında context'e yeniden enjekte edilen dosyalardan ibarettir.
 
-## Nerede Ne Var
+## Bu Repodaki Örnekler
 
-Kaynak burada, **çalışan kopya `~/.claude/` altında.** Claude Code agent ve
-command'ları sadece `~/.claude/` (ve repo içi `.claude/`) altında arar; bu repo
-git'e giren kaynak, `~/.claude/` ise kurulmuş hâli.
+### `.claude/agents/context-auditor.md`
 
-```
-claudecalis/            ← kaynak (düzenleme burada yapılır)
-  agents/               →  ~/.claude/agents/
-  commands/             →  ~/.claude/commands/
-  conventions/          →  ~/.claude/conventions/   (README.md hariç)
-  global/               →  ~/.claude/               (kökün kendisi)
-  skills/               →  ~/.claude/skills/
-  hooks/                →  kopyalanmaz; .claude/settings.json mutlak yolla çağırır
-  templates/            →  kopyalanmaz; elle repolara düşürülür
-  tests/  docs/         →  kopyalanmaz; reponun kendi doğrulaması ve kanıtı
-  install.ps1           ← kopyalamayı yapan script
-  validate.ps1          ← yapının kendi denetimi
-```
+Bir **subagent** örneği. Kurulumun context maliyetini ölçer.
 
-Kurulum:
+Neden subagent: iş onlarca dosya okumayı gerektirir. Ana thread'de yapılsa
+context dolardı. Subagent kendi context penceresinde çalışır, geriye sadece
+tabloyu döner. Buna **context isolation** denir ve subagent'ların asıl varlık
+sebebidir.
 
-```powershell
-.\install.ps1 -DryRun               # ne yapacağını göster, dosyaya dokunma
-.\install.ps1                       # kur; üstüne yazacaksa önce yedekler
-.\install.ps1 -Uninstall -DryRun    # ne kaldıracağını göster
-.\install.ps1 -Uninstall            # kurduklarını geri kaldır
-```
-
-Script aynı içerikli dosyayı atlar, farklı olanı `~/.claude/backups/install-<tarih>/`
-altına yedekler. Kurulumdan sonra **Claude Code yeniden başlatılmalı.**
-
-`-Uninstall` yalnızca **bu repoda ismi bulunan** dosyaları hedefler; `~/.claude`
-tarafında hiç tarama yapmaz. ECC paketinin 28 agent / 46 skill / 60 command'ı bu
-tasarımda silinemez — repoda karşılıkları yok. Hedefteki dosya repodakinden
-farklıysa (elle düzenlenmişse) silinmez, "Korundu" diye işaretlenir.
-
-## Doğrulama
-
-```powershell
-.\validate.ps1              # tam denetim (testler dahil)
-.\validate.ps1 -SkipTests   # sadece statik kontroller
-```
-
-Bozuk bir agent/skill dosyası Claude Code tarafından **sessizce yok sayılır** —
-hata vermez, sadece o parça hiç çalışmaz. `validate.ps1` o sessiz
-başarısızlıkları gürültüye çevirir:
-
-| Kontrol | Neden önemli |
-|---|---|
-| Frontmatter geçerli mi | Bozuksa dosya hiç tanınmaz |
-| `name` ↔ dosya adı | Uyuşmazsa agent çağrılamaz |
-| `description` var mı, uzunluğu makul mü | Routing'i tek başına bu alan belirler |
-| `tools` adları tanınıyor mu | Yazım hatası = sessiz yetki kaybı |
-| `.ps1` dosyalarında BOM | Yoksa PowerShell 5.1 parse hatası verir |
-| `.ps1` sözdizimi | Çalıştırmadan yakalar |
-| Kaynak ↔ kurulu kopya senkronu | En sık hata: düzenleyip `install.ps1`'i unutmak |
-| **Hook bütünlüğü** | `settings.json` geçerli mi, her hook script'i yerinde mi |
-| **Sızıntı taraması** | Repoda API anahtarı / özel anahtar deseni var mı |
-| Testler | Pester takımı yeşil mi (48 test) |
-
-Hata çıkış kodunu 1 yapar, uyarı yapmaz. CI bu ayrımı kullanır.
-
-**Hook bütünlüğü neden ayrı bir kontrol:** `settings.json`'da bir hook yolu
-yanlışsa Claude Code hata vermez — hook sadece çalışmaz. Zorlayıcı katman
-sessizce ortadan kalkar ve bunu fark etmenin başka yolu yoktur. Kontrol
-`$CLAUDE_PROJECT_DIR` değişkenini çözerek her script'in gerçekten var olduğunu
-doğrular.
-
-**Sızıntı taramasında bir incelik:** desenler kaynak kodda parçalı yazılmıştır
-(`"AKIA" + "[0-9A-Z]{16}"`). Tam hâlleriyle yazılsalardı `validate.ps1`'in
-kendisi her taramada kendi desenine takılırdı.
-
-> Not: `.ps1` dosyaları **BOM'lu UTF-8** kaydedilmeli. Windows PowerShell 5.1
-> BOM görmezse dosyayı ANSI sanır, Türkçe karakterler ve `—` parse hatasına yol
-> açar.
-
-Elle yazılanların tam listesi: `~/.claude/MINE.md`.
-
-## Neler Kuruldu
-
-### Özellik hattı — dört agent + bir command
-
-`/feature <istek>` şu zinciri yürütür:
-
-```
-spec-writer  →  impl-planner  →  test-first  →  [ana thread]  →  change-reviewer
-ne yapılacak    nasıl yapılacak   kırmızı test     yeşile çevir      denetle
-```
-
-Tasarımın anlattığı üç şey:
-
-**Yetki, role göre kısılır.** `spec-writer`, `impl-planner` ve `change-reviewer`
-agent'larında `tools:` alanında Write/Edit **yok.** Spec yazarı kod yazamaz;
-denetçi kendi bulduğu hatayı düzeltemez — düzeltebilseydi denetim anlamını
-kaybederdi. Bir agent'a ihtiyacından fazla yetki verilmez.
-
-**Agent'lar sözleşmeyle konuşur.** Her agent sabit bir çıktı bloğu üretir
-(`## SPEC`, `## PLAN`, `## TESTLER`, `## DENETİM`) ve girdisi gelmediyse
-çalışmayı reddeder — `impl-planner`'a SPEC verilmezse plan uydurmaz, durur.
-Zincirde format serbestliği, sonraki halkanın girdisini bozar.
-
-**Uygulama adımı kasten agent'a verilmez.** Zincirin 4. adımını ana thread yapar.
-Sebebi: uygulama sırasında kullanıcıya soru sormak, ara sonuç göstermek ve yön
-değiştirmek gerekir. Subagent bunu yapamaz — kendi context'inde başlar, biter ve
-tek bir metin döner. Subagent'ın gücü de sınırı da aynı yerden gelir.
-
-#### Neden hepsi `model: sonnet`
-
-Beş agent da `model: sonnet` kullanır. Gerekçe: bu agent'ların işi **sınırlı ve
-formatı sabit.** Her biri belli bir girdiyi belli bir bloğa çevirir; açık uçlu
-mimari muhakeme yapmazlar — o iş ana thread'de kalır. Ayrıca `/feature`'ın her
-çalışması 4 agent doğurur, yani maliyet her koşuda dörtle çarpılır.
-
-Bu bir tercih, dogma değil. `spec-writer` veya `impl-planner` büyük ve belirsiz
-işlerde yetersiz kalırsa o iki agent Opus'a çekilebilir; `test-first` ve
-`change-reviewer` mekanik oldukları için sonnet'te kalmalı.
-
-### `context-auditor` — subagent
-
-Kurulumun context maliyetini ölçer.
-
-Neden subagent: iş onlarca dosya okumayı gerektirir. Ana thread'de yapılsa context
-dolardı. Subagent kendi context penceresinde çalışır, geriye sadece tabloyu döner.
-Buna **context isolation** denir ve subagent'ların asıl varlık sebebidir.
-
-İki tasarım kararı:
+Dikkat edilecek iki nokta:
 - `tools:` alanı `Read, Grep, Glob, Bash` ile sınırlı — Write/Edit **kasten** yok.
-  Denetçi rapor verir, karar vermez. Agent'a ihtiyacından fazla yetki verme.
-- `description:` alanı, ana modelin bu agent'ı ne zaman çağıracağına karar verdiği
+  Denetçi rapor verir, karar vermez.
+- `description:` alanı ana modelin bu agent'ı ne zaman çağıracağına karar verdiği
   **tek** bilgidir. Kötü yazılmış description = hiç çağrılmayan agent.
 
-### `memory-hygiene` — skill
+### `.claude/skills/memory-hygiene/SKILL.md`
 
-Bir bilginin hangi katmana yazılacağına karar verir.
+Bir **skill** örneği. Bir bilginin hangi katmana yazılacağına karar verir.
 
 Skill'ler **progressive disclosure** ile çalışır: normalde sadece frontmatter'daki
 `name` + `description` context'te durur (~50 token). Model konunun ilgili olduğuna
 karar verirse gövde o an yüklenir. Bu yüzden 46 skill'e sahip olmak 46 dosyayı
 context'te taşımak anlamına gelmez.
 
-**Agent ile skill farkı:** agent ayrı bir context'te çalışan işçidir; skill ise
-mevcut context'e yüklenen talimattır.
-
-## Yeni Bir İş Reposuna Başlarken
-
-```bash
-cp ~/claudecalis/templates/CLAUDE.md.template <repo>/CLAUDE.md
-```
-
-Doldur, doldurmadığın bölümleri sil. Kurallar için `templates/README.md`.
+Agent ile skill farkı: **agent ayrı bir context'te çalışan işçidir; skill ise
+mevcut context'e yüklenen talimattır.**
 
 ## Deney Disiplini
 
