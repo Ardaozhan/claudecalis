@@ -20,10 +20,12 @@ Kaynağı `~/claudecalis/` reposudur; `~/.claude/` altındaki kopyalar
 | `~/.claude/agents/test-first.md` | `agents/` | Özellik hattı 3/4 — PLAN → kırmızı testler |
 | `~/.claude/agents/change-reviewer.md` | `agents/` | Özellik hattı 4/4 — değişiklik denetimi |
 | `~/.claude/agents/context-auditor.md` | `agents/` | Kurulum context maliyeti denetçisi |
+| `~/.claude/agents/arda.md` | `agents/` | Türkçe grafik tasarım uzmanı — Codex Arda'nın Claude karşılığı, üretimi `codex exec` ile yaptırır |
 | `~/.claude/commands/feature.md` | `commands/` | `/feature` — özellik hattı |
 | `~/.claude/commands/bootstrap.md` | `commands/` | `/bootstrap` — iş reposu kurulumu |
 | `~/.claude/conventions/*.md` | `conventions/` | Dil konvansiyonları (TS, Python, Java/Kotlin, .NET) |
 | `~/.claude/skills/memory-hygiene/SKILL.md` | `skills/` | Bilgi hangi katmana yazılır kararı |
+| `~/.claude/skills/delege/SKILL.md` | `skills/` | Codex / Antigravity (agy) delegasyonu — ne zaman, hangi komutla, nasıl doğrulanır |
 
 Hepsi 2026-08-03'te yazıldı. `CLAUDE.md` ve `MINE.md` 2026-08-04'te versiyon
 kontrolüne alındı — o güne kadar elle düzenleniyorlardı ve tek yedeksiz
@@ -65,3 +67,13 @@ Akış:
 
 `~/.claude/` altındaki kopyayı düzenlemeye çalışırsan hook engeller ve seni
 kaynağa yönlendirir.
+
+## Repo dışı veri: `~/.claude/arda/`
+
+Arda tek ajan çalışır (7 uzmanlı ekip token maliyeti ve düşük getiri nedeniyle
+2026-11-04'te kaldırıldı). Akışın özü `agents/arda.md` içine gömülü. Bu klasörde
+yalnız isteğe bağlı okunanlar var: `CODEX-URETIM.md` (codex exec yöntemi),
+`DESIGN.md` (zor yaratıcı işler), `REFERENCE.md` + `corpus/behance/` (~9.7 MB).
+`memory/` gibi **install akışının dışında**: kişisel veri, paylaşılan repoya
+girmez, elle yönetilir. Orijinaller `C:\Users\ardao\ÖZGE\ozge-next\` ve Codex
+tarafında duruyor, silinmedi.
