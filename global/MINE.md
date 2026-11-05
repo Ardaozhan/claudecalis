@@ -31,9 +31,9 @@ Hepsi 2026-08-03'te yazıldı. `CLAUDE.md` ve `MINE.md` 2026-08-04'te versiyon
 kontrolüne alındı — o güne kadar elle düzenleniyorlardı ve tek yedeksiz
 parçalardı.
 
-Kaynağı belirsiz veya senkron öğeler (elle yazılmadı, bu tabloda değil):
+Başka kaynaktan gelen veya senkron öğeler (elle yazılmadı, bu tabloda değil):
 
-- `~/.claude/skills/limit/` — kaynağı belirsiz (ne ECC paketinden ne de bu repodan geliyor). Claude + Codex kota göstergesi.
+- `~/.claude/skills/limit/` — Avenox repolarından (avenoxai, `avenoxstatusline` kurulumuyla) 2026-11-04'te kopyalandı; kurulumda hash'ler kaynakla eşitti. Claude + Codex kota göstergesi. **2026-11-05'te yerel olarak değiştirildi** (kokpit/dashboard oturumu, `limit.py` + `SKILL.md`): upstream'den güncelleme bu değişikliklerin üzerine yazar, önce karşılaştır. Kayıt: ikinci beyin `knowledge/concepts/avenox-sistem-ilkeleri.md`.
 - `~/.claude/skills/synced/` — anthropic-skills senkron klasörü. Elle yazılmadı.
 - `~/.claude/settings.json` içindeki 4 hook (SessionStart, Stop, PreCompact, SessionEnd) ikinci-beyin `beyin_v3_bridge.py` köprüsüdür. Elle yazılan değil; Beyin V3 kurulumundan geliyor.
 
