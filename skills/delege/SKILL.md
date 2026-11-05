@@ -66,6 +66,18 @@ codex exec --skip-git-repo-check -s workspace-write -m gpt-6.1-terra -C "<dir>" 
 - **Sabit maliyet yüksek:** tek satırlık selam bile ~15k token harcadı (2026-11-05,
   `-s read-only`, gpt-6.1-terra); her çağrı hook'ları ve sistem bağlamını sıfırdan
   yükler. Kısa işi devretme, birkaç küçük işi tek çağrıda topla.
+- **Windows sandbox'ı (`-s workspace-write`) ayrı kullanıcıyla çalışır**
+  (`CodexSandboxOffline`, 2026-11-05 gözlemi): senin NuGet/npm önbelleğini görmez ve
+  ağ kapalı olduğu için `dotnet build` restore'da düşer (NU1301); `pwsh.exe` çağrısı
+  "Access is denied" verir. Codex'e **yalnız dosya düzenlemesi** ver; derleme, test ve
+  betik çalıştırmayı Claude kendi tarafında yapsın. Prompt'u uzun metinse stdin'den
+  ver: `Get-Content brif.md -Raw | codex exec ... -`.
+- **Büyük birebir taşıma işinde başarısız:** 2052 satırlık dosyayı partial'lara bölme
+  iki denemede (~71k token) sıfır değişiklikle bitti. Satır aralığıyla yapılabilen
+  deterministik işi betikle yap (birebir kopya, sıfır model token'ı), doğrulamayı
+  derleme + üye karşılaştırmasıyla kanıtla.
+- **Codex satır sonlarını değiştirebilir** (LF dosyayı CRLF yazdı): diff'i
+  `git diff --ignore-cr-at-eol` ile oku, commit'ten önce orijinal sona döndür.
 - Kurulum/giriş kontrolü: `codex --version` ve `codex login status` ("Logged in
   using ChatGPT" = abonelik, API anahtarı değil). Konum:
   `%LOCALAPPDATA%\Programs\OpenAI\Codex\bin\codex.exe`.
