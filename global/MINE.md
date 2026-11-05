@@ -75,6 +75,9 @@ Kullanıcı onaylı bir temizlik yaptı. Kaldırılan ECC öğeleri
   stitch-react-components, taste-design, vercel-react-best-practices, web-design-guidelines.
 
 - Tam temizlik öncesi yedek: `C:\Users\ardao\claude\_yedek\claude-config-20261105\`
+- `~/.claude` artık yerel git ile izleniyor (uzak depo yok). `.gitignore` izin listesi:
+  yalnız yapılandırma; kimlik bilgisi, transkript, geçmiş, önbellek ve `arda/corpus` dışarıda.
+  Değişikliği geri almak: `git -C ~/.claude log` / `git -C ~/.claude checkout <commit> -- <yol>`.
 
 Sayılar bu temizlikten sonra diskte ölçüldü.
 
