@@ -38,6 +38,9 @@ Kullanıcı 2026-11-05'te belirledi; komutla doğrulandı.
 3. **Ara katman gerekli mi?** Denemede haiku subagent iki komut için ~77k token
    harcadı; Codex'in kendi işi ~10k idi. Komutu **doğrudan kendin çalıştır**,
    çıktıyı filtrele. Subagent'ı yalnız gerçekten büyük, bağlam kirleten işte kullan.
+4. **Kota yetiyor mu?** Paralel, uzun ya da toplu işten önce `Kota` bölümüne göre
+   havuzu seç. Tek, kısa iş için kontrol gerekmez; kontrolün kendisi de onay ve
+   zaman ister.
 
 ## İş bölümü
 
@@ -87,6 +90,20 @@ Dosya okutacaksan oturuma özel kuralı settings dosyasına yaz (kalıcı ayara 
 - Gemini CLI ücretsiz hesapta çalışmıyor (`IneligibleTierError`); kullanma.
 - Paralel agy'yi durdurmak engellenebilir. Başlamadan süre sınırı koy.
 
+## Paralel çalıştırma
+
+Kaynak: avenoxai/avenoxskills `codex-fleet` (2026-11-05'te okundu). **Bu makinede
+denenmedi**; ilk kullanımda tek örnekle doğrula.
+
+- Birbirinden bağımsız işleri tek mesajda, birden çok Bash çağrısı olarak ve
+  `run_in_background: true` ile başlat. Ardışık bekleme.
+- Dosya yazan paralel işlerde her iş kendi klasöründe çalışsın (`-C <dir>`).
+  Git reposundaysa her iş için ayrı `git worktree`; aynı dosyaya iki iş yazmasın.
+- Kapsamları iş başlamadan ayır. Çakışma çıkarsa birleştirme Claude'un işidir.
+- Her işin sonucunu ayrı doğrula (aşağıdaki bölüm); biri "bitti" dedi diye
+  hepsini bitmiş sayma.
+- Paralel iş sayısı kota harcar; başlamadan `Kota` bölümüne bak.
+
 ## Doğrulama (zorunlu)
 
 Devredilen işin "bitti" demesi kanıt değildir.
@@ -101,7 +118,20 @@ Devredilen işin "bitti" demesi kanıt değildir.
 
 `limit` skill'i Claude ve Codex kotasını gösterir ama `~/.claude/.credentials.json`
 içindeki OAuth belirtecine dokunur. **Çalıştırmadan önce kullanıcıdan onay al.**
-Pencere dolmak üzereyse bekle, haftalık doluysa diğer havuza ver, ikisi de
-doluysa devretme.
+Bir oturumda bir kez okumak genelde yeter; yeni büyük işten önce tekrar sor.
+
+Okunan değeri havuz seçimine bağla (karar kuralı `limit` skill'inde; özet):
+
+| Durum | Ne yap |
+|---|---|
+| İki havuz da rahat | Yukarıdaki iş bölümü tablosu ve varsayılan modeller |
+| Claude havuzu dar, Codex rahat | Claude subagent yerine Codex'e ver (`codex exec`); Claude'da yalnız plan ve doğrulama kalsın |
+| Codex havuzu dar, Claude rahat | Kod işini haiku subagent'a ya da Claude'a ver; görsel işi ertele ve kullanıcıya söyle |
+| Bir pencere dolmak üzere (~5 puan) | Paralel iş sayısını düşür, en ucuz yeterli modeli seç, sırayla çalıştır |
+| 5 saatlik pencere dolu, ~30 dk içinde sıfırlanıyor | Bekle; diğer havuza kaydırma |
+| İkisi de dolu ya da değer bilinmiyor (`stale`, `live fetch failed`) | Devretme; iki sayıyı da bildir ve sor |
+
+agy'nin kotası `limit` ile okunmuyor; agy'ye vermek Claude ve Codex havuzlarını
+korur ama kendi sınırı bilinmez.
 
 Ayrıntılı gözlemler: ikinci beyin `knowledge/concepts/orkestrasyon-gotchas.md`.

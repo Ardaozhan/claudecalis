@@ -41,7 +41,8 @@ geçen) yalnız gerektiğinde oku. Kısa istekle gelen işi makul varsayımla ç
    **brief kısıtları** (istenen stil ve yasaklar; örn. "sade silüet" istenmişse
    iç detay/doku varsa FAIL); boyut ve oran (aşağıdaki komutla gerçek pikseli ölç,
    Read piksel vermez); metin birebir ve Türkçe karakterler (ı ğ ş ö ü ç İ);
-   fazladan yazı/logo/filigran; hiyerarşi ve okunabilirlik; fiziksel/anatomik
+   fazladan yazı/logo/filigran; hiyerarşi ve okunabilirlik (tam boy ve ~400 px
+   telefon ölçeğinde); fiziksel/anatomik
    kusur; seçilen fikrin ilk bakışta okunması; gerçek logo yaklaşık ise sadık
    sayma. Açamadığını UNVERIFIED bırak, geçti deme. Kendi beğenini kullanıcı
    kabulü sayma.
@@ -53,7 +54,9 @@ geçen) yalnız gerektiğinde oku. Kısa istekle gelen işi makul varsayımla ç
    **Boyut:** hedeften sapma varsa ve oran %2 içinde aynıysa yeniden çağrı yapma,
    kaynak dosyayı ezmeden yeni adla hedefe getir:
    `py -3 -I -c "import sys;from PIL import Image as I;p,o,w,h=sys.argv[1],sys.argv[2],int(sys.argv[3]),int(sys.argv[4]);i=I.open(p);W,H=i.size;print('gercek',W,H);t=min(W,H*w//h);u=t*h//w;l=(W-t)//2;k=(H-u)//2;i.crop((l,k,l+t,k+u)).resize((w,h),I.LANCZOS).save(o);print('cikti',I.open(o).size)" GİRİŞ.png ÇIKIŞ.png 1080 1350`
-   (yalnız ölçmek için aynı komut; kırpma kenardan en fazla birkaç piksel alır).
+   (Bu komut her çalışmada çıktı dosyası yazar; yalnız ölçmek için:
+   `py -3 -I -c "import sys;from PIL import Image as I;print(I.open(sys.argv[1]).size)" DOSYA.png`.
+   %2 içindeki sapmada kırpma, oran farkı kadar kenar keser: 1080 px'te en fazla yaklaşık 20 px.)
    Oran %2'den fazla saparsa kırpma metni kesebilir; yeniden üret.
 
 ## Sınırlar
@@ -63,6 +66,9 @@ geçen) yalnız gerektiğinde oku. Kısa istekle gelen işi makul varsayımla ç
   raporda belirt. Raster vektör veya baskı kalıbı değildir, bunu da belirt. Tool
   oranı garanti etmez.
 - Seride önce birkaç gerçek örnek göster; seri eksikse tam teslim deme.
+- Düzenlemede önce doğru hedef dosyayı aç ve korunacak özellikleri prompt'ta yaz.
+- Aynı varlığı yeni oturumda veya klasörde sürdürmek düzeltme bütçesini sıfırlamaz.
+- Yapay fotoğrafı gerçek belge/kanıt gibi sunma.
 - Referans/ilham gerekirse yalnız o zaman: `C:/Users/ardao/.claude/arda/REFERENCE.md` (Behance
   korpusu `corpus/behance/`, önce `index.tsv`) ve zor yaratıcı işte `DESIGN.md`. Kaynağı kopyalama.
 - Açık yetki olmadan kalıcı belleğe/tercihe yazma.
@@ -70,5 +76,6 @@ geçen) yalnız gerektiğinde oku. Kısa istekle gelen işi makul varsayımla ç
 ## Rapor (kısa, Türkçe)
 
 Dosya yolu; istenen ve gerçek boyut; seçilen fikir ve varsayımlar (2-3 satır);
-kontrol tablosu (PASS/FAIL/UNVERIFIED); kalan kusurlar. Yapılmayan aşamayı
+kontrol tablosu (PASS/FAIL/UNVERIFIED); kalan kusurlar. Karar, prompt, son görünüm,
+teknik doğrulama ve kullanıcı kabulünü ayrı söyle (kabul yalnız kullanıcıdan gelir). Yapılmayan aşamayı
 yapılmış gösterme.
