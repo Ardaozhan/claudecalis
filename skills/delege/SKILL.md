@@ -63,6 +63,12 @@ codex exec --skip-git-repo-check -s workspace-write -m gpt-6.1-terra -C "<dir>" 
 - Codex'te `-i` prompt'u yutar; görsel eklerken `--` kullan.
 - Testi **çalışma klasörünün içinden** çalıştır (`Push-Location <dir>`). Dışarıdan
   çalıştırmak proje klasörüne `.pytest_cache` bırakır.
+- **Sabit maliyet yüksek:** tek satırlık selam bile ~15k token harcadı (2026-11-05,
+  `-s read-only`, gpt-6.1-terra); her çağrı hook'ları ve sistem bağlamını sıfırdan
+  yükler. Kısa işi devretme, birkaç küçük işi tek çağrıda topla.
+- Kurulum/giriş kontrolü: `codex --version` ve `codex login status` ("Logged in
+  using ChatGPT" = abonelik, API anahtarı değil). Konum:
+  `%LOCALAPPDATA%\Programs\OpenAI\Codex\bin\codex.exe`.
 
 ## agy (Antigravity)
 
