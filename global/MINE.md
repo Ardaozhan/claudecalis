@@ -31,8 +31,17 @@ Hepsi 2026-08-03'te yazıldı. `CLAUDE.md` ve `MINE.md` 2026-08-04'te versiyon
 kontrolüne alındı — o güne kadar elle düzenleniyorlardı ve tek yedeksiz
 parçalardı.
 
-**Kurulu kopyalar hook ile korunuyor.** `protect-installed-copies`, yukarıdaki
-yolların hepsine Write/Edit ile yazmayı engeller. Düzenleme kaynakta yapılır.
+Kaynağı belirsiz veya senkron öğeler (elle yazılmadı, bu tabloda değil):
+
+- `~/.claude/skills/limit/` — kaynağı belirsiz (ne ECC paketinden ne de bu repodan geliyor). Claude + Codex kota göstergesi.
+- `~/.claude/skills/synced/` — anthropic-skills senkron klasörü. Elle yazılmadı.
+- `~/.claude/settings.json` içindeki 4 hook (SessionStart, Stop, PreCompact, SessionEnd) ikinci-beyin `beyin_v3_bridge.py` köprüsüdür. Elle yazılan değil; Beyin V3 kurulumundan geliyor.
+
+**Kurulu kopyalar yalnızca `claudecalis` içinde hook ile korunuyor.** `protect-installed-copies`
+hook'u global değil: yalnızca `~/claudecalis/.claude/settings.json` üzerinden, o repo
+açıkken çalışır ve yukarıdaki yolların hepsine Write/Edit ile yazmayı engeller. `~/.claude/settings.json`'da
+bu hook yok; başka bir projede çalışırken `~/.claude/` altındaki kopyaları bu hook korumaz.
+Düzenleme kaynakta yapılır.
 
 Ayrıca `~/claudecalis/hooks/` altında üç hook var ama bunlar `~/.claude/` altına
 **kurulmuyor** — `claudecalis/.claude/settings.json` üzerinden yalnızca o repoda
@@ -43,11 +52,31 @@ elle düzenlenirler ve versiyonlanmazlar.
 
 ## ECC'den Gelenler (elle yazılmadı)
 
-- `~/.claude/agents/` — yukarıdaki 5 agent hariç 28 agent
-- `~/.claude/skills/` — yukarıdaki `memory-hygiene` hariç 46 skill
-- `~/.claude/commands/` — yukarıdaki `feature` hariç 60 slash command
-- `~/.claude/rules/` — common + 12 dile özel kural seti
+- `~/.claude/agents/` — yukarıdaki 6 agent hariç 21 agent (toplam 27 − 6)
+- `~/.claude/skills/` — 35 skill (toplam 39 − `memory-hygiene` ve `delege` − `limit` ve `synced`; ikisi de ECC değil, bkz. yukarı)
+- `~/.claude/commands/` — yukarıdaki `feature` ve `bootstrap` hariç 51 slash command (toplam 53 − 2)
+- `~/.claude/rules/` — common + 5 dile özel kural seti (csharp, java, kotlin, python, typescript)
 - `~/.claude/hooks/hooks.json` — PreToolUse / PostToolUse hook'ları
+
+## 2026-11-05 temizliği
+
+Kullanıcı onaylı bir temizlik yaptı. Kaldırılan ECC öğeleri
+**silinmedi, yedeğe taşındı:**
+
+- Yedek klasörü: `C:\Users\ardao\claude\_yedek\kaldirilan-20261105\`
+  - `AGENTS.md`, `rules/README.md`
+  - `rules/` altında cpp, golang, perl, php, rust, swift
+  - agents: C++/Go/Rust build-resolver ve reviewer'lar, `flutter-reviewer`
+  - skills: `design-super-agent`, C++/Go/Rust/Perl/Laravel skill'leri
+  - commands: C++/Go/Rust build-review-test komutları
+
+- `skills/` altındaki 11 kırık junction kaldırıldı (hedefleri `~/.agents/skills` artık yok):
+  design-md, enhance-prompt, figma, playwright, remotion, shadcn-ui, stitch-loop,
+  stitch-react-components, taste-design, vercel-react-best-practices, web-design-guidelines.
+
+- Tam temizlik öncesi yedek: `C:\Users\ardao\claude\_yedek\claude-config-20261105\`
+
+Sayılar bu temizlikten sonra diskte ölçüldü.
 
 ## Bakım
 
