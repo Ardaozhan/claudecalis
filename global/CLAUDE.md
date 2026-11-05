@@ -34,6 +34,10 @@ göre davran. Karışık repolarda dosya bazında karar ver.
   karar sende kalır; işi Codex, agy veya subagent'a devretsen de sonucu kendin
   doğrularsın. Devretmek zorunda değilsin: küçük işi kendin yapmak çoğu zaman
   daha ucuz. Ne zaman, kime, hangi modelle ve hangi komutla: `delege` skill'i.
+- **"Orkestra şefisin" dediğimde yalnız yönet** (2026-11-05). O işte kod ya da
+  içerik yazma, düzeltme yapma, betik yazma: hepsini ajanlara ver. Sende kalan:
+  plan, brif, iş bölümü, ajan çıktısını okuma/doğrulama (diff okuma, derleme ve
+  testi çalıştırma) ve karar. Ajan hata yaparsa düzeltmeyi yine ajana gönder.
 
 ## Context Disiplini
 
