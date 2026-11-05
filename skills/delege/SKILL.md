@@ -32,7 +32,9 @@ Kullanıcı 2026-11-05'te belirledi; komutla doğrulandı.
 ## Devretmeden önce sor
 
 1. **İş küçük mü?** (tek dosya, birkaç satır) → kendin yap. Prompt yazmak, sonucu
-   okumak ve doğrulamak da token harcar.
+   okumak ve doğrulamak da token harcar. **İstisna:** kullanıcı "orkestra şefisin"
+   dediyse bu adım yok: küçük iş ve düzeltmeler de ajana gider; doğrulama sende
+   (CLAUDE.md).
 2. **Spec net mi?** Codex'in kalitesi spesifikasyonun kalitesiyle sınırlıdır.
    Belirsiz işi devretme, önce netleştir.
 3. **Ara katman gerekli mi?** Denemede haiku subagent iki komut için ~77k token
