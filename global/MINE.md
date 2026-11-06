@@ -39,7 +39,7 @@ Başka kaynaktan gelen veya senkron öğeler (elle yazılmadı, bu tabloda deği
 
 Repo dışında, doğrudan `~/.claude/` altında elle yazılanlar (install akışında yok; düzenleme yerinde yapılır):
 
-- `~/.claude/hooks/companion_context.py` — **elle yazıldı, 2026-11-06.** SessionStart hook'u; ikinci beyin `🔮 850-Companion/` altındaki Core, Kurallar, Last-Session ve Threads (yalnız aktif bölüm) dosyalarını her oturum bağlamına koyar (toplam ≤9.000 karakter). Neden: CLAUDE.md'deki "oturum başında oku" kuralı farklı oturumlarda tekrar tekrar atlandı. `settings.json` kaydını Arda `/hooks` ile yapar (otomatik mod Claude'un ayar değiştirmesini engelliyor); kayıt yapılana kadar hook çalışmaz.
+- `~/.claude/hooks/companion_context.py` — **elle yazıldı, 2026-11-06.** SessionStart hook'u; ikinci beyin `🔮 850-Companion/` altındaki Core, Kurallar, Last-Session ve Threads (yalnız aktif bölüm) dosyalarını her oturum bağlamına koyar (toplam ≤9.000 karakter). Neden: CLAUDE.md'deki "oturum başında oku" kuralı farklı oturumlarda tekrar tekrar atlandı. `~/.claude/settings.json` SessionStart'a 2026-11-06'da kaydedildi (Arda, `register_hook.py` ile; otomatik mod Claude'un ayar değiştirmesini engelliyor). Yedek: `settings.json.bak-2026-11-06`.
 - `~/.claude/rules/common/agents.md` — ECC dosyası, **2026-11-06'da yerel olarak değiştirildi**: "Assign by quota" bölümü eklendi (işi topluca tek araca verme; Claude/Codex kotasına göre böl, belirsizse sor). ECC güncellemesi bu bölümün üzerine yazar, önce karşılaştır.
 
 **Kurulu kopyalar yalnızca `claudecalis` içinde hook ile korunuyor.** `protect-installed-copies`
