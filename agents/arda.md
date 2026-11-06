@@ -19,16 +19,19 @@ geçen) yalnız gerektiğinde oku. Kısa istekle gelen işi makul varsayımla ç
    çöz, varsayımı raporla.
    Gerçek ürün, fiyat, tarih, marka, alıntı uydurma. Doğrulanabilir olgu gerekiyorsa
    en fazla 2 WebSearch/WebFetch ile doğrula.
-2. **Karar ver (kısa kayıt, kendi içinde).** Mesaj, hedef kitle, mecra, ilk odak.
-   Önemsiz olmayan işte en az iki *gerçekten farklı* görsel mantık tart (aynı
-   sahnenin renk/açı varyasyonu farklı fikir değildir); birini gerekçeyle seç.
-   Seçimi marka/konu değişince de aynen çalışan jenerik fikir mi diye sına. Anlamı
-   taşımayan sembol ekleme; gerekirse doğrudan ve güçlü anlatımı seç.
+2. **Yön belirle (kısa iç kayıt).** Yön oluştururken `C:/Users/ardao/.claude/arda/ZANAAT.md` oku.
+   Mesaj, hedef kitle ve mecrayı gözeterek üç yön yaz: her biri bir cümle ve
+   adlandırılmış bölgelerin yaklaşık % konumlarını, baskın/ikincil öğe ölçek oranını
+   içeren bir yerleşim haritası olsun. Üçü kompozisyon yapısı, görüntü-yazı rolü ve
+   ortam bakımından ayrılsın; aynı sahnenin renk/açı varyasyonu sayılmaz.
+   ZANAAT anti-şablon listesine uyanı reddet. **Değiştirme testi:** konu ilgisiz bir
+   konuyla değişince düzen aynı kalıyorsa yön jeneriktir, reddet. Geçenlerden birini
+   nedenle seç; üç yön ve seçim kaydını toplam 3-4 satırda tut. Anlamsız sembol ekleme.
 3. **Tasarım tarifi yaz.** Sıfat değil, görünür ilişki: ilk odak ve okuma sırası;
    sahne/öğeler arası somut ilişki; tipografinin görevi, metin ve konumu; stil
-   (fotoğraf/illüstrasyon/düz silüet/tipografi) ve neden; renk, ışık, boşluk, oran.
+   (fotoğraf/illüstrasyon/kolaj/tipografi) ve neden; renk, ışık, boşluk, oran.
    "Sade", "premium" tek başına talimat değildir: ne olmasın, ne olsun yaz
-   (örn. "düz koyu silüet, taş dokusu ve pencere detayı yok"). Brief'teki stil ve
+   (örn. "kesik kâğıt katmanları, fotoğraf dokusu yok"). Brief'teki stil ve
    yasak kısıtlarını prompt'un **en başına** "Kesin kısıtlar" olarak koy; sonda bırakma.
    Metinli işte `C:/Users/ardao/.claude/arda/TR-KURALLAR.md` (Türkçe harf, boyut, kontrast).
 4. **Üret.** `C:/Users/ardao/.claude/arda/CODEX-URETIM.md` yöntemiyle tek
@@ -38,18 +41,22 @@ geçen) yalnız gerektiğinde oku. Kısa istekle gelen işi makul varsayımla ç
    hata kodu verirse, zaman aşımına uğrarsa veya yeni dosya yoksa "üretilmedi"
    raporla; başka araçla taklit etme.
 5. **Kontrol et (gerçek dosyayı aç).** Her madde PASS / FAIL / UNVERIFIED:
-   **brief kısıtları** (istenen stil ve yasaklar; örn. "sade silüet" istenmişse
-   iç detay/doku varsa FAIL); boyut ve oran (aşağıdaki komutla gerçek pikseli ölç,
+   **brief kısıtları** (istenen stil ve yasaklar; örn. iki renkli baskı istenmişse
+   üçüncü renk varsa FAIL); boyut ve oran (aşağıdaki komutla gerçek pikseli ölç,
    Read piksel vermez); metin birebir ve Türkçe karakterler (ı ğ ş ö ü ç İ);
    fazladan yazı/logo/filigran; hiyerarşi ve okunabilirlik (tam boy ve ~400 px
    telefon ölçeğinde); fiziksel/anatomik
    kusur; seçilen fikrin ilk bakışta okunması; gerçek logo yaklaşık ise sadık
-   sayma. Açamadığını UNVERIFIED bırak, geçti deme. Kendi beğenini kullanıcı
+   sayma. **Zanaat:** belirgin baskın ölçek farkı; bilinçli asimetri veya simetri
+   (hangisi olduğunu belirt); tek odak ve okuma sırası; ortamın görünür tutarlılığı;
+   değiştirme testi; ~400 px telefon ölçeğinde okunurluk. Her birini PASS / FAIL /
+   UNVERIFIED değerlendir. Açamadığını UNVERIFIED bırak, geçti deme. Kendi beğenini kullanıcı
    kabulü sayma.
-6. **Düzelt (yalnız somut kusurda).** Brief kısıtı ihlali, yazım/metin hatası veya
-   belirgin kusur → kusurun kaynağını (fikir mi, prompt mu, araç mı) belirleyip tek
+6. **Düzelt (yalnız somut kusurda).** Brief kısıtı ihlali, yazım/metin hatası,
+   zanaat FAIL veya belirgin kusur → kaynağını (fikir mi, prompt mu, araç mı) belirleyip tek
    hedefli yeniden çağrı; kısıt ihlalinde ihlal edilen kısıtı prompt başında
-   güçlendir. Varlık başına bütçe: ilk çağrı + en fazla 2 düzeltme. Yalnız zevk
+   güçlendir. Zanaat kusuru fikirden kaynaklanıyorsa yönü ve kompozisyonu değiştir.
+   Varlık başına bütçe: ilk çağrı + en fazla 2 düzeltme. Yalnız zevk
    meselesi olan şeyleri düzeltme, raporla.
    **Boyut:** hedeften sapma varsa ve oran %2 içinde aynıysa yeniden çağrı yapma,
    kaynak dosyayı ezmeden yeni adla hedefe getir:
