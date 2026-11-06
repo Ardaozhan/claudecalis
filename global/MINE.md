@@ -20,7 +20,7 @@ Kaynağı `~/claudecalis/` reposudur; `~/.claude/` altındaki kopyalar
 | `~/.claude/agents/test-first.md` | `agents/` | Özellik hattı 3/4 — PLAN → kırmızı testler |
 | `~/.claude/agents/change-reviewer.md` | `agents/` | Özellik hattı 4/4 — değişiklik denetimi |
 | `~/.claude/agents/context-auditor.md` | `agents/` | Kurulum context maliyeti denetçisi |
-| `~/.claude/agents/arda.md` | `agents/` | Türkçe grafik tasarım uzmanı — Codex Arda'nın Claude karşılığı, üretimi `codex exec` ile yaptırır |
+| `~/.claude/agents/arda.md` | `agents/` | Türkçe grafik tasarım uzmanı — üç yönlü konsept aşaması ve `ZANAAT.md` rehberiyle üretimi `codex exec` ile yaptırır |
 | `~/.claude/commands/feature.md` | `commands/` | `/feature` — özellik hattı |
 | `~/.claude/commands/bootstrap.md` | `commands/` | `/bootstrap` — iş reposu kurulumu |
 | `~/.claude/conventions/*.md` | `conventions/` | Dil konvansiyonları (TS, Python, Java/Kotlin, .NET) |
@@ -36,6 +36,11 @@ Başka kaynaktan gelen veya senkron öğeler (elle yazılmadı, bu tabloda deği
 - `~/.claude/skills/limit/` — Avenox repolarından (avenoxai, `avenoxstatusline` kurulumuyla) 2026-11-04'te kopyalandı; kurulumda hash'ler kaynakla eşitti. Claude + Codex kota göstergesi. **2026-11-05'te yerel olarak değiştirildi** (kokpit/dashboard oturumu, `limit.py` + `SKILL.md`): upstream'den güncelleme bu değişikliklerin üzerine yazar, önce karşılaştır. Kayıt: ikinci beyin `knowledge/concepts/avenox-sistem-ilkeleri.md`.
 - `~/.claude/skills/synced/` — anthropic-skills senkron klasörü. Elle yazılmadı.
 - `~/.claude/settings.json` içindeki 4 hook (SessionStart, Stop, PreCompact, SessionEnd) ikinci-beyin `beyin_v3_bridge.py` köprüsüdür. Elle yazılan değil; Beyin V3 kurulumundan geliyor.
+
+Repo dışında, doğrudan `~/.claude/` altında elle yazılanlar (install akışında yok; düzenleme yerinde yapılır):
+
+- `~/.claude/hooks/companion_context.py` — **elle yazıldı, 2026-11-06.** SessionStart hook'u; ikinci beyin `🔮 850-Companion/` altındaki Core, Kurallar, Last-Session ve Threads (yalnız aktif bölüm) dosyalarını her oturum bağlamına koyar (toplam ≤9.000 karakter). Neden: CLAUDE.md'deki "oturum başında oku" kuralı farklı oturumlarda tekrar tekrar atlandı. `settings.json` kaydını Arda `/hooks` ile yapar (otomatik mod Claude'un ayar değiştirmesini engelliyor); kayıt yapılana kadar hook çalışmaz.
+- `~/.claude/rules/common/agents.md` — ECC dosyası, **2026-11-06'da yerel olarak değiştirildi**: "Assign by quota" bölümü eklendi (işi topluca tek araca verme; Claude/Codex kotasına göre böl, belirsizse sor). ECC güncellemesi bu bölümün üzerine yazar, önce karşılaştır.
 
 **Kurulu kopyalar yalnızca `claudecalis` içinde hook ile korunuyor.** `protect-installed-copies`
 hook'u global değil: yalnızca `~/claudecalis/.claude/settings.json` üzerinden, o repo
@@ -104,8 +109,10 @@ kaynağa yönlendirir.
 
 Arda tek ajan çalışır (7 uzmanlı ekip token maliyeti ve düşük getiri nedeniyle
 2026-11-04'te kaldırıldı). Akışın özü `agents/arda.md` içine gömülü. Bu klasörde
-yalnız isteğe bağlı okunanlar var: `CODEX-URETIM.md` (codex exec yöntemi),
-`DESIGN.md` (zor yaratıcı işler), `REFERENCE.md` + `corpus/behance/` (~9.7 MB).
+yalnız isteğe bağlı okunanlar var: `CODEX-URETIM.md` (codex exec yöntemi ve prompt blok sırası),
+`DESIGN.md` (zor yaratıcı işler), `ZANAAT.md` (kompozisyon ve zanaat rehberi),
+`REFERENCE.md` (Behance korpusunun Instagram kapsamı) + `corpus/behance/` (~9.7 MB).
+Sosyal medya dışı işlerde önce `ZANAAT.md` okunur (2026-11-06).
 `memory/` gibi **install akışının dışında**: kişisel veri, paylaşılan repoya
 girmez, elle yönetilir. Orijinaller `C:\Users\ardao\ÖZGE\ozge-next\` ve Codex
 tarafında duruyor, silinmedi.
