@@ -110,6 +110,20 @@ Dosya okutacaksan oturuma özel kuralı settings dosyasına yaz (kalıcı ayara 
 - Gemini CLI ücretsiz hesapta çalışmıyor (`IneligibleTierError`); kullanma.
 - Paralel agy'yi durdurmak engellenebilir. Başlamadan süre sınırı koy.
 
+## Ajanı sürdür (Arda, 2026-11-06)
+
+Orkestrada iş bitince ajanı bırakma; sıradaki iş (düzeltme, aynı katmanın sonraki
+adımı) aynı ajana gider. Yeni ajan yalnız paralel kol ya da farklı katman için açılır.
+
+- Claude subagent: `SendMessage` ile aynı ajan ID'sine yeni brif.
+- Codex: çıktıdaki `session id: <uuid>` satırını sakla, sonra
+  `Push-Location <dir>; Get-Content brif.md -Raw | codex exec resume <uuid> --skip-git-repo-check -m gpt-6.1-terra -c sandbox_mode="workspace-write" -`.
+  `resume`'da `-C` ve `-s` yok: klasör çalışma dizininden gelir. İlk kullanımda
+  yazma izninin geldiğini dosya değişikliğiyle doğrula.
+- PowerShell pipe'ından önce `$OutputEncoding = [Text.UTF8Encoding]::new($false)`.
+- Codex'e rustfmt çalıştırtma: stable'da `skip_children` yok sayılır, rustfmt tüm
+  modül ağacını yeniden yazar (Kokpit'te dosyaları CRLF yaptı, 2026-11-06).
+
 ## Paralel çalıştırma
 
 Kaynak: avenoxai/avenoxskills `codex-fleet` (2026-11-05'te okundu). **Bu makinede
