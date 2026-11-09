@@ -160,10 +160,13 @@ Bir oturumda bir kez okumak genelde yeter; yeni büyük işten önce tekrar sor.
 
 Okunan değeri havuz seçimine bağla (karar kuralı `limit` skill'inde; özet):
 
+Esas pencere 5 saatlik olandır; haftalık pencere yalnız dolmaya yaklaşık 5 puan
+kaldığında belirleyicidir (Arda, 2026-11-10).
+
 | Durum | Ne yap |
 |---|---|
 | İki havuz da rahat | Yukarıdaki iş bölümü tablosu ve varsayılan modeller |
-| Claude havuzu dar, Codex rahat | Claude subagent yerine Codex'e ver (`codex exec`); Claude'da yalnız plan ve doğrulama kalsın |
+| Claude havuzu dar, Codex rahat | Düzenleme, config ve dosya yazma işini de haiku subagent yerine Codex'e ver (`codex exec`); subagent ara katmanı Claude penceresinden yer; Claude'da yalnız plan ve doğrulama kalsın |
 | Codex havuzu dar, Claude rahat | Kod işini haiku subagent'a ya da Claude'a ver; görsel işi ertele ve kullanıcıya söyle |
 | Bir pencere dolmak üzere (~5 puan) | Paralel iş sayısını düşür, en ucuz yeterli modeli seç, sırayla çalıştır |
 | 5 saatlik pencere dolu, ~30 dk içinde sıfırlanıyor | Bekle; diğer havuza kaydırma |
