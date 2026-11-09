@@ -26,6 +26,7 @@ Kaynağı `~/claudecalis/` reposudur; `~/.claude/` altındaki kopyalar
 | `~/.claude/conventions/*.md` | `conventions/` | Dil konvansiyonları (TS, Python, Java/Kotlin, .NET) |
 | `~/.claude/skills/memory-hygiene/SKILL.md` | `skills/` | Bilgi hangi katmana yazılır kararı |
 | `~/.claude/skills/delege/SKILL.md` | `skills/` | Codex / Antigravity (agy) delegasyonu — ne zaman, hangi komutla, nasıl doğrulanır |
+| `~/.claude/skills/hafta/SKILL.md` | `skills/` | `/hafta`: haftalık plan (`claude\takip`), planla / bugün / kapat (2026-11-09) |
 
 Hepsi 2026-08-03'te yazıldı. `CLAUDE.md` ve `MINE.md` 2026-08-04'te versiyon
 kontrolüne alındı — o güne kadar elle düzenleniyorlardı ve tek yedeksiz
@@ -39,7 +40,8 @@ Başka kaynaktan gelen veya senkron öğeler (elle yazılmadı, bu tabloda deği
 
 Repo dışında, doğrudan `~/.claude/` altında elle yazılanlar (install akışında yok; düzenleme yerinde yapılır):
 
-- `~/.claude/hooks/companion_context.py` — **elle yazıldı, 2026-11-06.** SessionStart hook'u; ikinci beyin `🔮 850-Companion/` altındaki Core, Kurallar, Last-Session ve Threads (yalnız aktif bölüm) dosyalarını her oturum bağlamına koyar (toplam ≤9.000 karakter). Neden: CLAUDE.md'deki "oturum başında oku" kuralı farklı oturumlarda tekrar tekrar atlandı. `~/.claude/settings.json` SessionStart'a 2026-11-06'da kaydedildi (Arda, `register_hook.py` ile; otomatik mod Claude'un ayar değiştirmesini engelliyor). Yedek: `settings.json.bak-2026-11-06`.
+- `~/.claude/hooks/companion_context.py` — **elle yazıldı, 2026-11-06.** SessionStart hook'u; ikinci beyin `🔮 850-Companion/` altındaki Core, Kurallar, Last-Session ve Threads (yalnız aktif bölüm) dosyalarını her oturum bağlamına koyar (toplam ≤9.000 karakter). Neden: CLAUDE.md'deki "oturum başında oku" kuralı farklı oturumlarda tekrar tekrar atlandı. `~/.claude/settings.json` SessionStart'a 2026-11-06'da kaydedildi (Arda, `register_hook.py` ile; otomatik mod Claude'un ayar değiştirmesini engelliyor). Yedek: `settings.json.bak-2026-11-06`. 2026-11-09: hafta planı bloğu eklendi (`plan_notice`: bugün, geciken, 7 gün teslim; `claude/takip`'ten okur, dosyalardan önce, ≤1.200 karakter; test için `--date YYYY-MM-DD`). 2026-11-09: `TOTAL_LIMIT` 9.000 → 9.500 (Threads kesiliyordu; çıktı ~8.000 karakter).
+- `~/.claude/rules/common/patterns.md` ve `security.md` — ECC dosyaları, **2026-11-09'da yerel olarak sadeleştirildi**: patterns'tan "paralel ajanlarla değerlendir" kaldırıldı (kota kuralıyla çelişiyordu); security'de commit kontrol listesi yalnız kullanıcı girdisi/auth/uç nokta kodu için. Yedek: `~/.claude/backups/rules-20261109/`. ECC güncellemesi üzerine yazar, önce karşılaştır.
 - `~/.claude/rules/common/agents.md` — ECC dosyası, **2026-11-06'da yerel olarak değiştirildi**: "Assign by quota" bölümü eklendi (işi topluca tek araca verme; Claude/Codex kotasına göre böl, belirsizse sor). ECC güncellemesi bu bölümün üzerine yazar, önce karşılaştır.
 
 **Kurulu kopyalar yalnızca `claudecalis` içinde hook ile korunuyor.** `protect-installed-copies`
