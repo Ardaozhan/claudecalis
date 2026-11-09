@@ -74,6 +74,10 @@ codex exec --skip-git-repo-check -s workspace-write -m gpt-6.1-terra -C "<dir>" 
   "Access is denied" verir. Codex'e **yalnız dosya düzenlemesi** ver; derleme, test ve
   betik çalıştırmayı Claude kendi tarafında yapsın. Prompt'u uzun metinse stdin'den
   ver: `Get-Content brif.md -Raw | codex exec ... -`.
+- **"Çalıştırma" yasağını dar yaz (2026-11-09).** Brifte "do not run anything"
+  denince Codex dosya okumayı da yasak saydı ve hiçbir şey yazmadan bitti
+  (~42k token boşa). Doğru kalıp: "You MAY run read-only shell commands to read
+  files. Do NOT run python/tests." Aynı oturumu `resume` ile sürdürmek düzeltti.
 - **Büyük birebir taşıma işinde başarısız:** 2052 satırlık dosyayı partial'lara bölme
   iki denemede (~71k token) sıfır değişiklikle bitti. Satır aralığıyla yapılabilen
   deterministik işi betikle yap (birebir kopya, sıfır model token'ı), doğrulamayı
