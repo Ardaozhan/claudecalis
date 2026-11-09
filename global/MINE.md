@@ -109,6 +109,8 @@ kaynağa yönlendirir.
 
 ## Repo dışı veri: `~/.claude/arda/`
 
+- `olc.py` + `test_olc.py` — elle yazıldı (Codex), 2026-11-10; Arda ajanının kontrol adımında boyut, 400 px telefon kopyası, marka rengi (ΔE) ve WCAG kontrastını kodla ölçer. Neden: kurallardaki sayılar gözle denetleniyordu (Avenox video dersi: tekrar eden hata koda yazılır).
+
 Arda tek ajan çalışır (7 uzmanlı ekip token maliyeti ve düşük getiri nedeniyle
 2026-11-04'te kaldırıldı). Akışın özü `agents/arda.md` içine gömülü. Bu klasörde
 yalnız isteğe bağlı okunanlar var: `CODEX-URETIM.md` (codex exec yöntemi ve prompt blok sırası),

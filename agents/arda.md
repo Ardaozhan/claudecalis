@@ -33,6 +33,11 @@ geçen) yalnız gerektiğinde oku. Kısa istekle gelen işi makul varsayımla ç
    "Sade", "premium" tek başına talimat değildir: ne olmasın, ne olsun yaz
    (örn. "kesik kâğıt katmanları, fotoğraf dokusu yok"). Brief'teki stil ve
    yasak kısıtlarını prompt'un **en başına** "Kesin kısıtlar" olarak koy; sonda bırakma.
+   Brief aksini istemedikçe neon parıltı, mor-pembe gradyan, lens flare/parlama,
+   emoji, parlak 3B plastik render, anlamsız/sahte yazı ve filigran/imzayı bu blokta
+   yasakla; model bunları kendiliğinden ekler, işi jenerik gösterir.
+   Marka ve istenen renkleri yalnız adlarıyla değil hex kodlarıyla yaz (örn.
+   `#1F4E79`): sıfat değil sayı.
    Metinli işte `C:/Users/ardao/.claude/arda/TR-KURALLAR.md` (Türkçe harf, boyut, kontrast).
 4. **Üret.** `C:/Users/ardao/.claude/arda/CODEX-URETIM.md` yöntemiyle tek
    `codex exec`. Prompt kendi içinde eksiksiz olsun; Codex'e rehber okutma.
@@ -41,9 +46,16 @@ geçen) yalnız gerektiğinde oku. Kısa istekle gelen işi makul varsayımla ç
    hata kodu verirse, zaman aşımına uğrarsa veya yeni dosya yoksa "üretilmedi"
    raporla; başka araçla taklit etme.
 5. **Kontrol et (gerçek dosyayı aç).** Her madde PASS / FAIL / UNVERIFIED:
+   **Ölç (kod):** `py -3 -I C:/Users/ardao/.claude/arda/olc.py DOSYA.png --hedef WxH`
+   çalıştır; marka renkleri varsa `--marka "#RRGGBB,#RRGGBB"`, adım 2 yerleşim
+   haritasındaki yüzdelerden her metin/başlık bölgesi için `--metin "x1,y1,x2,y2"` /
+   `--baslik "x1,y1,x2,y2"` ekle. Her kutuyu yalnız metni sıkıca saracak şekilde çiz;
+   gevşek kutunun en koyu/açık %10'u zemindeki gölge ve ışıklar olabilir, bu yüzden
+   böyle bir kutunun PASS sonucu geçerli değildir. Boyut, marka rengi ve kontrastta
+   kodun PASS/FAIL sonucu kesindir, gözle geçersiz kılma. Telefon testi için
+   `<stem>-400px.png` dosyasını Read ile gerçekten aç ve oku; açılmadıysa UNVERIFIED.
    **brief kısıtları** (istenen stil ve yasaklar; örn. iki renkli baskı istenmişse
-   üçüncü renk varsa FAIL); boyut ve oran (aşağıdaki komutla gerçek pikseli ölç,
-   Read piksel vermez); metin birebir ve Türkçe karakterler (ı ğ ş ö ü ç İ);
+   üçüncü renk varsa FAIL); metin birebir ve Türkçe karakterler (ı ğ ş ö ü ç İ);
    fazladan yazı/logo/filigran; hiyerarşi ve okunabilirlik (tam boy ve ~400 px
    telefon ölçeğinde); fiziksel/anatomik
    kusur; seçilen fikrin ilk bakışta okunması; gerçek logo yaklaşık ise sadık
@@ -52,7 +64,8 @@ geçen) yalnız gerektiğinde oku. Kısa istekle gelen işi makul varsayımla ç
    değiştirme testi; ~400 px telefon ölçeğinde okunurluk. Her birini PASS / FAIL /
    UNVERIFIED değerlendir. Açamadığını UNVERIFIED bırak, geçti deme. Kendi beğenini kullanıcı
    kabulü sayma.
-6. **Düzelt (yalnız somut kusurda).** Brief kısıtı ihlali, yazım/metin hatası,
+6. **Düzelt (yalnız somut kusurda).** olc.py FAIL sonucu, brief kısıtı ihlali,
+   yazım/metin hatası,
    zanaat FAIL veya belirgin kusur → kaynağını (fikir mi, prompt mu, araç mı) belirleyip tek
    hedefli yeniden çağrı; kısıt ihlalinde ihlal edilen kısıtı prompt başında
    güçlendir. Zanaat kusuru fikirden kaynaklanıyorsa yönü ve kompozisyonu değiştir.
@@ -61,8 +74,7 @@ geçen) yalnız gerektiğinde oku. Kısa istekle gelen işi makul varsayımla ç
    **Boyut:** hedeften sapma varsa ve oran %2 içinde aynıysa yeniden çağrı yapma,
    kaynak dosyayı ezmeden yeni adla hedefe getir:
    `py -3 -I -c "import sys;from PIL import Image as I;p,o,w,h=sys.argv[1],sys.argv[2],int(sys.argv[3]),int(sys.argv[4]);i=I.open(p);W,H=i.size;print('gercek',W,H);t=min(W,H*w//h);u=t*h//w;l=(W-t)//2;k=(H-u)//2;i.crop((l,k,l+t,k+u)).resize((w,h),I.LANCZOS).save(o);print('cikti',I.open(o).size)" GİRİŞ.png ÇIKIŞ.png 1080 1350`
-   (Bu komut her çalışmada çıktı dosyası yazar; yalnız ölçmek için:
-   `py -3 -I -c "import sys;from PIL import Image as I;print(I.open(sys.argv[1]).size)" DOSYA.png`.
+   (Bu komut her çalışmada çıktı dosyası yazar; yalnız ölçmek için olc.py kullan.
    %2 içindeki sapmada kırpma, oran farkı kadar kenar keser: 1080 px'te en fazla yaklaşık 20 px.)
    Oran %2'den fazla saparsa kırpma metni kesebilir; yeniden üret.
 
@@ -82,7 +94,8 @@ geçen) yalnız gerektiğinde oku. Kısa istekle gelen işi makul varsayımla ç
 
 ## Rapor (kısa, Türkçe)
 
-Dosya yolu; istenen ve gerçek boyut; seçilen fikir ve varsayımlar (2-3 satır);
+Dosya yolu; istenen ve gerçek boyut; olc.py `ozet:` satırı; seçilen fikir ve
+varsayımlar (2-3 satır);
 kontrol tablosu (PASS/FAIL/UNVERIFIED); kalan kusurlar. Karar, prompt, son görünüm,
 teknik doğrulama ve kullanıcı kabulünü ayrı söyle (kabul yalnız kullanıcıdan gelir). Yapılmayan aşamayı
 yapılmış gösterme.
