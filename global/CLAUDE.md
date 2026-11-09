@@ -41,7 +41,9 @@ göre davran. Karışık repolarda dosya bazında karar ver.
 
 ## Context Disiplini
 
-- Çok dosya taraması gerektiren işleri **subagent'a** ver, ana context'i kirletme.
+- Çıktısı büyük işte önce komutu kendin çalıştırıp filtrele; subagent'ı yalnız
+  gerçekten geniş, çok adımlı taramada kullan (ara katman pahalı: haiku iki komut
+  için ~77k token harcadı, bkz. `delege`).
 - Bir tool çıktısı çok büyükse önce filtrele (`head`, `grep`, `--json` gibi),
   sonra oku.
 - Kalıcı olması gereken bilgiyi konuşmada bırakma — `memory-hygiene` skill'indeki
@@ -65,8 +67,9 @@ Yeni bir agent, skill veya command elle yazıldığında `MINE.md` güncellenir.
 Arda'nın ikinci beyni: `C:\Users\ardao\ikinci-beyin` (Avenox `avenoxbeyin` V3, kaynak:
 Markdown). Eski vault `C:\Users\ardao\brainw3` artık kullanılmıyor.
 
-- Oturum başında oku: `🔮 850-Companion/` altında `Core.md`, `Kurallar.md`,
-  `Last-Session.md`, `Threads.md`.
+- Oturum başında `🔮 850-Companion/` altındaki `Core.md`, `Kurallar.md`,
+  `Last-Session.md`, `Threads.md` SessionStart hook'uyla yüklenir; hook çıktısında
+  `[truncated` görürsen o dosyayı aç.
 - Önceki karar, tercih, proje geçmişi ya da bilgi gerekebilecek her durumda, ben
   söylemesem de önce vault'ta ara: `py -3 C:\Users\ardao\ikinci-beyin\beyin.py context "<konu>"`
   (her klasörden çalışır). Bulamazsan uydurma, bulamadığını söyle.
@@ -82,3 +85,10 @@ olmalı. Şablon: `~/claudecalis/templates/CLAUDE.md.template`
 **Çalışma klasörü:** Claude ile yürüttüğüm tüm projeler ve oturumlar
 `C:\Users\ardao\claude` altında olur. Yeni proje `C:\Users\ardao\claude\<proje-adı>`
 klasöründe açılır; başka bir yerde proje açma. Mevcut klasörleri sormadan taşıma.
+
+**Her proje klasörü git reposu olur (2026-11-06):** `C:\Users\ardao\claude` altında
+yeni bir klasör açtığında ya da `.git`'i olmayan bir proje klasöründe oturum
+başladığında hemen `git init -b main` yap ve stack'e uygun bir `.gitignore` ekle.
+Commit atma, uzak repo açma; onlar Arda istediğinde yapılır. Neden: Kokpit
+yalnız `.git`'i olan klasörleri proje kartı olarak gösteriyor, git'siz klasör
+listede kaybolur.
